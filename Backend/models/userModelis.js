@@ -24,7 +24,7 @@ const userSchema = new Schema ({
     
 })
 
-userSchema.statics.signup = async function (email, password){
+userSchema.statics.signup = async function (name, lastname, email, password){
     //validavimas
     if(!email || !password || !name || !lastname){
         throw Error ('Visi laukeliai privalomi.')
@@ -41,7 +41,7 @@ userSchema.statics.signup = async function (email, password){
     }
     const salt = await bcrypt.genSalt(10)
     const hash = await bcrypt.hash(password, salt)
-    const user = await this.create({email, password: hash})
+    const user = await this.create({name, lastname, email, password: hash})
     return user
 }
 
@@ -61,4 +61,4 @@ userSchema.statics.login = async function(email, password){
     return user
 }
 
-export default mongoose.model('User', userSchema)
+export default mongoose.model('useriai', userSchema,'useriai')
