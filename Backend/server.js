@@ -1,10 +1,11 @@
 import dotenv from 'dotenv'
 import express from 'express'
-import pratimaiRoutes from './routes/pratimai.js'
+// import pratimaiRoutes from './routes/pratimai.js'
 import mongoose from 'mongoose'
-import userRoutes from './routes/user.js'
+// import userRoutes from './routes/user.js'
 
-dotenv.config()
+dotenv.config({ path: './Backend/.env' });
+
 
 //express app
 const app =express()
