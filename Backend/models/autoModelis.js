@@ -3,12 +3,12 @@ import bcrypt from 'bcrypt'
 // import validator from 'validator'
 
 const Schema = mongoose.Schema
-const userSchema = new Schema ({
-    photo: {
-        data: Buffer,
-        contentType: String,
-        required: true,
-    },
+const automobilisSchema = new Schema ({
+    // photo: {
+    //     data: Buffer,
+    //     contentType: String,
+    //     required: true,
+    // },
 
     model: {
         type: String,
@@ -82,4 +82,4 @@ const userSchema = new Schema ({
 //     return user
 // }
 
-// export default mongoose.model('User', userSchema)
+export default mongoose.model('Automobilis', automobilisSchema)

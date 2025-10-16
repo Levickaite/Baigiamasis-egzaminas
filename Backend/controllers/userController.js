@@ -2,7 +2,7 @@ import User from '../models/userModelis.js'
 import jwt from 'jsonwebtoken'
 
 const createToken= (_id)=>{
-return jwt.sign({_id}, process.env.SECRET, {expiresIn: '3d'})
+return jwt.sign({id: user._id, role: user.role }, process.env.SECRET, {expiresIn: '3d'})
 }
 
 //login user
@@ -11,7 +11,7 @@ const {email, password} = req.body
 try{
 const user = await User.login(email, password)
 const token = createToken(user._id)
-res.status(200).json({email, token})
+res.status(200).json({email, token, role: user.role})
 } catch (error){
 res.status(400).json({error: error.message})
 }
@@ -21,9 +21,9 @@ res.status(400).json({error: error.message})
 export const signupUser = async (req, res)=>{
 const {name, lastname, email, password} = req.body
 try {
-const user = await User.signup(name,lastname, email, password)
+const user = await User.signup({name,lastname, email, password, role: role || 'user'})
 const token = createToken(user._id)
-res.status(200).json({email, token})
+res.status(200).json({email, token, role: user.role})
 } catch (error) {
 res.status(400).json({error: error.message})
 }

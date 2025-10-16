@@ -21,8 +21,12 @@ const userSchema = new Schema ({
         type: String,
         rerquired: true
     },
-    
-})
+    role: {
+    type: String,
+    enum: ['user', 'admin', 'dealer'], // allowed roles
+    default: 'user'                    // default role when registering
+  }
+}, { timestamps: true });
 
 userSchema.statics.signup = async function (name, lastname, email, password){
     //validavimas
