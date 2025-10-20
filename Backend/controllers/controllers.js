@@ -3,11 +3,14 @@ import mongoose from 'mongoose'
 
 // GET - paimti visus automobilius
 export const getAutomobilis = async (req, res)=>{
-const user_id = req.user._id
-const masinos = await Automobilis.find({user: user_id}).sort({createdAt: -1})
-res.status(200).json(masinos)
-}
-
+// const user_id = req.user._id
+try {
+    const masinos = await Automobilis.find({}).sort({ createdAt: -1 });
+    res.status(200).json(masinos);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+} // isimta user.id - nelogiska kad matyti auto 
 //POST - sukurti naują automobilį
 export const createAutomobilis = async (req, res)=>{
 const {photo, model, price, color, engine, year, gearBox, fuelType, power} = req.body
