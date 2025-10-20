@@ -12,7 +12,7 @@ const automobilisSchema = new Schema ({
 
     model: {
         type: String,
-        rerquired: true
+        required: true
     },
     price: {
         type: Number,
@@ -38,8 +38,13 @@ const automobilisSchema = new Schema ({
         type: String,
         required: true
     },
-    power:{
+    power: {
         type: Number,
+        required: true
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     },
 

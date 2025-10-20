@@ -1,10 +1,10 @@
 import Automobilis from '../models/autoModelis.js'
 import mongoose from 'mongoose'
 
-// GET - paimti visus rpatimus
+// GET - paimti visus automobilius
 export const getAutomobilis = async (req, res)=>{
-const automobiliai_id= req.automobiliai._id
-const masinos = await Automobilis.find({automobiliai_id}).sort({createdAt: -1})
+const user_id = req.user._id
+const masinos = await Automobilis.find({user: user_id}).sort({createdAt: -1})
 res.status(200).json(masinos)
 }
 
@@ -26,8 +26,8 @@ if (emptyFields.length > 0){
 return res.status(400).json({error: 'Prašome užpildyti visus laukelius', emptyFields})
 }
 try {
-const automobiliai_id = req.automobiliai._id
-const masina = await Workout.create({photo, model, price, color, engine, year, gearBox, fuelType, power, automobiliai_id})
+const user_id = req.user._id
+const masina = await Automobilis.create({photo, model, price, color, engine, year, gearBox, fuelType, power, user: user_id})
 res.status(200).json(masina)
 }catch(error){
 res.status(400).json({error: error.message})

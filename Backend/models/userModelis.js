@@ -23,12 +23,12 @@ const userSchema = new Schema ({
     },
     role: {
     type: String,
-    enum: ['user', 'admin', 'dealer'], // allowed roles
+    // allowed roles
     default: 'user'                    // default role when registering
   }
 }, { timestamps: true });
 
-userSchema.statics.signup = async function (name, lastname, email, password){
+userSchema.statics.signup = async function (name, lastname, email, password, role = 'user'){
     //validavimas
     if(!email || !password || !name || !lastname){
         throw Error ('Visi laukeliai privalomi.')
@@ -45,7 +45,7 @@ userSchema.statics.signup = async function (name, lastname, email, password){
     }
     const salt = await bcrypt.genSalt(10)
     const hash = await bcrypt.hash(password, salt)
-    const user = await this.create({name, lastname, email, password: hash})
+    const user = await this.create({name, lastname, email, password: hash, role})
     return user
 }
 

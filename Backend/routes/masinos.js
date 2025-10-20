@@ -13,7 +13,7 @@ router.get('/:id', (req, res)=>{
 // POST - sukurti naują automobilį
 // router.post('/', controller.createAutomobilis)
 router.post('/', requireAuth, (req, res, next) => {
-  if (req.user.role !== 'dealer' && req.user.role !== 'admin') {
+  if (req.user.role !== 'admin') {
     return res.status(403).json({ message: 'Not authorized to add listings' });
   }
   next();
