@@ -1,2 +1,0 @@
-Labas
-as krabas
