@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Footer from "*\src\components\Footer.js"
-import Header from "*\src\components\Header.js"
+import Footer from "../components/Footer"
+import Header from "../components/Navbar"
 
 function Skelbimai() {
   const [cars, setCars] = useState([]);
@@ -73,7 +73,6 @@ function Skelbimai() {
     if (power) {
       result = result.filter((car) => car.power === power);
     }
-//------------------------------------------------------------------------------------------------------------------
 
     // Sorting
     if (sort === "asc") result.sort((a, b) => a.price - b.price);
@@ -81,7 +80,7 @@ function Skelbimai() {
 
     setFilteredCars(result);
     setCurrentPage(1);
-  }, [search, priceRange, sort, , cars]);
+  }, [search, priceRange, sort,engine,model,color, gearBox, fuelType, power, cars]);
 
   // Pagination
   const indexOfLast = currentPage * carsPerPage;
@@ -103,11 +102,11 @@ function Skelbimai() {
 
       {/* Price Filter */}
       <div>
-        <label>Max price: €{priceRange[1]}</label>
+        <label>Didžiausia suma: {priceRange[1]}€</label>
         <input
           type="range"
           min="0"
-          max="10000"
+          max="100000"
           step="100"
           value={priceRange[1]}
           onChange={(e) => setPriceRange([0, Number(e.target.value)])}
@@ -124,13 +123,60 @@ function Skelbimai() {
         </select>
       </div>
 
-      {/* Transmission Dropdown */}
+      {/* Model Dropdown */}
+      <div>
+        <label>Modelis:</label>
+        <select value={model} onChange={(e) => setModel(e.target.value)}>
+          <option value="">Visi</option>
+          {/* <option value="Manual">Manual</option>
+          <option value="Automatic">Automatic</option> */}
+        </select>
+      </div>
+      {/* Color Dropdown */}
+      <div>
+        <label>Spalva:</label>
+        <select value={color} onChange={(e) => setColor(e.target.value)}>
+          <option value="">Visos</option>
+          <option value="Silver">Sidabrinė</option>
+          <option value="Black">Juoda</option>
+          <option value="White">Balta</option>
+          <option value="Red">Raudona</option>
+        </select>
+      </div>
+      {/* Gear box Dropdown */}
       <div>
         <label>Pavarų dėžė:</label>
-        <select value={transmission} onChange={(e) => setTransmission(e.target.value)}>
-          <option value="">All</option>
-          <option value="Manual">Manual</option>
-          <option value="Automatic">Automatic</option>
+        <select value={gearBox} onChange={(e) => setGearBox(e.target.value)}>
+          <option value="">Visos</option>
+          <option value="Manual">Mechaninė</option>
+          <option value="Automatic">Automatinė</option>
+        </select>
+      </div>
+      {/* Fuel Type Dropdown */}
+      <div>
+        <label>Kuro tipas:</label>
+        <select value={fuelType} onChange={(e) => setFuelType(e.target.value)}>
+          <option value="">Visi</option>
+          <option value="Diesel">Dyzelis</option>
+          <option value="Petrol">Benzinas</option>
+        </select>
+      </div>
+      {/* Engine Dropdown */}
+      <div>
+        <label>Variklio tūris:</label>
+        <select value={engine} onChange={(e) => setEngine(e.target.value)}>
+          <option value="">Visi</option>
+          {/* <option value=""></option>
+          <option value=""></option> */}
+        </select>
+      </div>
+      {/* Power Dropdown */}
+      <div>
+        <label>Variklio galingumas:</label>
+        <select value={power} onChange={(e) => setPower(e.target.value)}>
+          <option value="">Visi</option>
+          {/* <option value=""></option>
+          <option value=""></option> */}
         </select>
       </div>
 
@@ -140,8 +186,7 @@ function Skelbimai() {
           <div key={car._id} style={{ border: "1px solid #ccc", margin: "10px", padding: "10px" }}>
             <h3>{car.model}</h3>
             <p>Price: €{car.price}</p>
-            <p>Transmission: {car.transmission}</p>
-            {car.photo?.data ? (
+            {/* {car.photo?.data ? (
               <img
                 src={`data:${car.photo.contentType};base64,${car.photo.data}`}
                 alt={car.model}
@@ -149,7 +194,7 @@ function Skelbimai() {
               />
             ) : (
               <p>No photo</p>
-            )}
+            )} */}
           </div>
         ))}
       </div>
@@ -157,16 +202,16 @@ function Skelbimai() {
       {/* Pagination */}
       <div>
         <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1}>
-          Prev
+          Prieš
         </button>
 
-        <span> Page {currentPage} of {totalPages} </span>
+        <span> Puslapis {currentPage} iš {totalPages} </span>
 
         <button
           onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
           disabled={currentPage === totalPages}
         >
-          Next
+            Kitas
         </button>
       </div>
     </div>

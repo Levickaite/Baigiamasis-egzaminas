@@ -1,4 +1,5 @@
 import logo from './logo.svg';
+import Skelbimai from './pages/Automobiliai'
 import './App.css';
 
 function App() {
