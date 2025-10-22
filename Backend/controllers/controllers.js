@@ -63,3 +63,13 @@ return res.status(404).json({error: 'Tokio automobilio nėra'})
 res.status(200).json(masina)
 
 }
+
+export const getTopAutomobiliai = async (req, res) => {
+    try {
+        const topCars = await Automobilis.find({}).sort({ traffic: -1 }).limit(5);
+        res.status(200).json(topCars);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+//top auto filtravimas pagal traffica

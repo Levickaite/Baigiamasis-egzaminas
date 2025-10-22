@@ -47,7 +47,11 @@ const automobilisSchema = new Schema ({
         ref: 'User',
         required: true
     },
-
+    traffic: {
+        type: Number,
+        default: 0
+    }
+// pridedu traffico sekimą, kad home page galima būtų rodyt populiariausius
 })
 
 // userSchema.statics.signup = async function (email, password){

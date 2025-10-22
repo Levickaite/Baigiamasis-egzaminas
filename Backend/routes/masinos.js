@@ -23,3 +23,6 @@ router.patch('/:id', controller.updateAutomobilis)
 //DELETE - ištrinti vieną automobilį
 router.delete('/:id', controller.deleteAutomobilis)
 export default router
+
+//top auto
+router.get('/top', controller.getTopAutomobiliai)
