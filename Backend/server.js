@@ -4,7 +4,7 @@ import masinosRoutes from './routes/masinos.js'
 import mongoose from 'mongoose'
 import userRoutes from './routes/user.js'
 
-dotenv.config({ path: './Backend/.env' });
+dotenv.config({ path: './.env' });
 
 
 //express app
