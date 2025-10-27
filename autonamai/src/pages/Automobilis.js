@@ -1,20 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { AuthContext } from "../context/AuthContext";
 import Footer from "../components/Footer"
 import Header from "../components/Navbar"
 
 export default function Automobilis() {
   const { id } = useParams();
   const [car, setCar] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [editedCar, setEditedCar] = useState({});
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    const userRole = localStorage.getItem("role");
-    if (userRole === "admin") setIsAdmin(true);
-  }, []);
+    if (user && user.role === "admin") setIsAdmin(true);
+  }, [user]);
 
   useEffect(() => {
     const fetchCar = async () => {
@@ -50,6 +52,33 @@ export default function Automobilis() {
       alert("Nepavyko atnaujinti duomenų.");
     }
   };
+
+  const addToCart = async (automobilisId) => {
+    if (!user) {
+      alert("Turite būti prisijungęs, kad pridėtumėte į krepšelį.");
+      return;
+    }
+    try {
+      const response = await fetch("http://localhost:4000/api/Autonamai/krepselis/add", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}`
+        },
+        body: JSON.stringify({ automobilisId, kiekis: 1 }),
+      });
+      if (response.ok) {
+        alert("Automobilis pridėtas į krepšelį!");
+      } else {
+        alert("Nepavyko pridėti į krepšelį.");
+      }
+    } catch (error) {
+      console.error("Klaida pridedant į krepšelį:", error);
+      alert("Klaida pridedant į krepšelį.");
+    }
+  };
+
+  if (loading) return <p>Kraunama...</p>;
 
   return (
     <>
@@ -113,6 +142,7 @@ export default function Automobilis() {
           <p>Kuro tipas: {car.fuelType}</p>
           <p>Galia: {car.power}</p>
 
+          {user && <button onClick={() => addToCart(id)}>Įdėti į krepšelį</button>}
           {isAdmin && <button onClick={() => setEditMode(true)}>Redaguoti</button>}
         </div>
       )}
