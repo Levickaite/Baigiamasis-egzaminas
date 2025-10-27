@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Footer from "../components/Footer"
-import Header from "../components/Navbar"
+import { useNavigate } from "react-router-dom"; 
 
 function Skelbimai() {
   const [cars, setCars] = useState([]);
@@ -17,6 +16,7 @@ function Skelbimai() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const carsPerPage = 6;
+  const navigate = useNavigate();
 
   // Fetch cars from backend
   useEffect(() => {
@@ -183,7 +183,10 @@ function Skelbimai() {
       {/* Cars list */}
       <div>
         {currentCars.map((car) => (
-          <div key={car._id} style={{ border: "1px solid #ccc", margin: "10px", padding: "10px" }}>
+          <div key={car._id} style={{ border: "1px solid #ccc", margin: "10px", padding: "10px" }}
+            onClick={() => navigate(`/automobiliai/${car._id}`)} 
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#f7f7f7"}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "white"}>
             <h3>{car.model}</h3>
             <p>Kaina: €{car.price}</p>
             {/* {car.photo?.data ? (

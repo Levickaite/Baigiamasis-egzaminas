@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Skelbimai from './pages/Automobiliai';
+import Uzsakymai from './pages/ManoUzsakymai';
 
 import Login from './pages/Login';
 import Signup from './pages/Signup';
