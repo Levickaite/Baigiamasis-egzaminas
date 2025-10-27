@@ -8,6 +8,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
 
+
 function App() {
   return (
     <div className="App">
@@ -15,6 +16,7 @@ function App() {
       <BrowserRouter>
       <Navbar/>
       <Home/>
+      
       <Footer/>
       </BrowserRouter>
       </AuthContextProvider>
