@@ -115,11 +115,11 @@ function Skelbimai() {
 
       {/* Sort */}
       <div>
-        <label>Sort by price:</label>
+        <label>Rūšiuoti pagal kainą:</label>
         <select value={sort} onChange={(e) => setSort(e.target.value)}>
-          <option value="">None</option>
-          <option value="asc">Low → High</option>
-          <option value="desc">High → Low</option>
+          <option value="">Nieko</option>
+          <option value="asc">Maž → Didž</option>
+          <option value="desc">Didž → Maž</option>
         </select>
       </div>
 
@@ -185,7 +185,7 @@ function Skelbimai() {
         {currentCars.map((car) => (
           <div key={car._id} style={{ border: "1px solid #ccc", margin: "10px", padding: "10px" }}>
             <h3>{car.model}</h3>
-            <p>Price: €{car.price}</p>
+            <p>Kaina: €{car.price}</p>
             {/* {car.photo?.data ? (
               <img
                 src={`data:${car.photo.contentType};base64,${car.photo.data}`}
