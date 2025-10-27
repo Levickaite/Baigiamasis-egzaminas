@@ -5,7 +5,7 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import Skelbimai from './pages/Automobiliai';
 import Uzsakymai from './pages/ManoUzsakymai';
-
+import Krepselis from './pages/Krepselis';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 
@@ -20,6 +20,7 @@ function App() {
             <Route path="/automobiliai" element={<Skelbimai />} />
             {/* jei turėsi dar puslapį su konkretaus automobilio informacija */}
             <Route path="/automobiliai/:id" element={<Skelbimai />} />
+            <Route path="/krepselis" element={<Krepselis />} />
             <Route path="/Prisijungti" element={<Login />} />
             <Route path="/Registruotis" element={<Signup />} />
           </Routes>

@@ -3,6 +3,8 @@ import express from 'express'
 import masinosRoutes from './routes/masinos.js'
 import mongoose from 'mongoose'
 import userRoutes from './routes/user.js'
+import krepselisRoutes from './routes/krepselisRoutes.js'
+import uzsakymasRoutes from './routes/uzsakymasRoutes.js'
 
 dotenv.config({ path: './.env' });
 
@@ -23,6 +25,9 @@ app.use('/api/Autonamai/useriai', userRoutes)
 app.get('/',(req, res)=>{
     res.json({mssg: 'Welcome to the app!'})
 } )
+
+app.use('/api/Autonamai/krepselis', krepselisRoutes);
+app.use('/api/Autonamai/uzsakymas', uzsakymasRoutes);
 
 //connect to DB
 mongoose.connect(process.env.URI)
