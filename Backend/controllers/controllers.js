@@ -13,7 +13,8 @@ try {
 } // isimta user.id - nelogiska kad matyti auto 
 //POST - sukurti naują automobilį
 export const createAutomobilis = async (req, res)=>{
-const {photo, model, price, color, engine, year, gearBox, fuelType, power} = req.body
+const { model, price, color, engine, year, gearBox, fuelType, power} = req.body
+const photo = req.file ? req.file.path : null;
 
 let emptyFields=[]
 // if(!photo) {emptyFields.push('photo')}

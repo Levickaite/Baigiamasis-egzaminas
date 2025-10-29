@@ -2,6 +2,11 @@ import express from 'express'
 import * as controller from '../controllers/controllers.js'
 import requireAuth from '../middleware/requireAuth.js'
 
+//cloud
+import {upload} from '../config/upload.js'
+
+
+
 const router = express.Router()
 // router.use()
 //GET - paimti visus automobilius
@@ -12,7 +17,9 @@ router.get('/:id', (req, res)=>{
 })
 // POST - sukurti naują automobilį
 // router.post('/', controller.createAutomobilis)
-router.post('/', requireAuth, (req, res, next) => {
+router.post('/', requireAuth, 
+  upload.single('photo'),
+  (req, res, next) => {
   if (req.user.role !== 'admin') {
     return res.status(403).json({ message: 'Not authorized to add listings' });
   }
@@ -22,7 +29,10 @@ router.post('/', requireAuth, (req, res, next) => {
 router.patch('/:id', controller.updateAutomobilis)
 //DELETE - ištrinti vieną automobilį
 router.delete('/:id', controller.deleteAutomobilis)
-export default router
 
 //top auto
 router.get('/top', controller.getTopAutomobiliai)
+
+
+
+export default router

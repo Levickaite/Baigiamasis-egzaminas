@@ -12,6 +12,7 @@ export default function Automobilis() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [editedCar, setEditedCar] = useState({});
+  const [photo, setPhoto] = useState(null);
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
@@ -40,6 +41,8 @@ export default function Automobilis() {
 
   const handleSave = async () => {
     try {
+ 
+
       const response = await axios.put(
         `http://localhost:4000/api/Autonamai/automobiliai/${id}`,
         editedCar

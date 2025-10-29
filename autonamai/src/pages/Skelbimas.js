@@ -55,8 +55,13 @@ export default function Skelbimas() {
         formData.append("images", images[i]);
       }
 
+      const token = localStorage.getItem("token");
+
       const res = await axios.post("http://localhost:4000/api/Autonamai/automobiliai", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: { "Content-Type": "multipart/form-data",
+                    Authorization: `Bearer ${token}`
+         },
+        
       });
 
       alert("Naujas skelbimas sėkmingai sukurtas!");
