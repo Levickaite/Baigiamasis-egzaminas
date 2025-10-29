@@ -4,12 +4,11 @@ import bcrypt from 'bcrypt'
 
 const Schema = mongoose.Schema
 const automobilisSchema = new Schema ({
-    photo: {
-        data: Buffer,
-        contentType: String,
-        required: true,
-    },
 
+    photo: {
+        type: String, // čia bus cloudinary URL
+        required: true
+    },
     model: {
         type: String,
         required: true

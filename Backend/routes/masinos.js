@@ -3,7 +3,7 @@ import * as controller from '../controllers/controllers.js'
 import requireAuth from '../middleware/requireAuth.js'
 
 //cloud
-import {upload} from '../config/upload.js'
+import { cloudinary, upload } from '../config/cloudinary.js';
 
 
 

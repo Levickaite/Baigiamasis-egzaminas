@@ -15,18 +15,25 @@ export default function Skelbimas() {
     power: "",
   });
   const [images, setImages] = useState([]);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(true);
   const [loading, setLoading] = useState(false);
 
   // Patikrinam, ar prisijungęs administratorius
   useEffect(() => {
-    const role = localStorage.getItem("role");
-    if (role === "admin") {
+  const fetchUser = async () => {
+    const res = await fetch("/api/Autonamai/useriai"); // your backend endpoint
+    const data = await res.json();
+    localStorage.setItem("role", data.role);
+
+    if (data.role === "admin") {
       setIsAdmin(true);
     } else {
       alert("Tik administratorius gali kurti naujus skelbimus.");
     }
-  }, []);
+  };
+
+  fetchUser();
+}, []);
 
   // Duomenų įvedimo valdymas
   const handleChange = (e) => {
@@ -55,13 +62,8 @@ export default function Skelbimas() {
         formData.append("images", images[i]);
       }
 
-      const token = localStorage.getItem("token");
-
       const res = await axios.post("http://localhost:4000/api/Autonamai/automobiliai", formData, {
-        headers: { "Content-Type": "multipart/form-data",
-                    Authorization: `Bearer ${token}`
-         },
-        
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       alert("Naujas skelbimas sėkmingai sukurtas!");
@@ -88,18 +90,15 @@ export default function Skelbimas() {
   if (!isAdmin) {
     return (
       <>
-        <Header />
-        <div style={{ padding: "40px", textAlign: "center" }}>
+         <div style={{ padding: "40px", textAlign: "center" }}>
           <h3>Prieiga ribota – tik administratoriai gali kurti skelbimus.</h3>
         </div>
-        <Footer />
       </>
     );
   }
 
   return (
     <>
-      <Header />
       <div className="new-listing" style={{ maxWidth: "700px", margin: "40px auto", padding: "20px" }}>
         <h2>Naujo automobilio skelbimas</h2>
         <form onSubmit={handleSubmit} encType="multipart/form-data">
@@ -153,7 +152,6 @@ export default function Skelbimas() {
           </button>
         </form>
       </div>
-      <Footer />
     </>
   );
 }
