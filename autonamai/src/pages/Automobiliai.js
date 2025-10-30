@@ -189,7 +189,7 @@ function Skelbimai() {
             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "white"}>
             <h3>{car.model}</h3>
             <p>Kaina: €{car.price}</p>
-            {/* {car.photo?.data ? (
+            {car.photo?.data ? (
               <img
                 src={`data:${car.photo.contentType};base64,${car.photo.data}`}
                 alt={car.model}
@@ -197,7 +197,7 @@ function Skelbimai() {
               />
             ) : (
               <p>No photo</p>
-            )} */}
+            )}
           </div>
         ))}
       </div>

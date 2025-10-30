@@ -1,9 +1,10 @@
 import express from 'express'
 import * as controller from '../controllers/controllers.js'
-import requireAuth from '../middleware/requireAuth.js'
 
 //cloud
-import { cloudinary, upload } from '../config/cloudinary.js';
+import requireAuth from '../middleware/requireAuth.js'
+// use multer/cloudinary uploader from middleware
+import { upload } from '../middleware/upload.js';
 
 
 
@@ -17,12 +18,13 @@ router.get('/:id', (req, res)=>{
 })
 // POST - sukurti naują automobilį
 // router.post('/', controller.createAutomobilis)
+// Accept multiple images uploaded from the client under field name "images"
 router.post('/', requireAuth, 
-  upload.single('photo'),
+  upload.array('images', 6),
   (req, res, next) => {
-  if (req.user.role !== 'admin') {
-    return res.status(403).json({ message: 'Not authorized to add listings' });
-  }
+  // if (req.user.role !== 'admin') {
+  //   return res.status(403).json({ message: 'Not authorized to add listings' });
+  // }
   next();
 }, controller.createAutomobilis);
 //PATCH - redaguoti vieną automobilį

@@ -47,46 +47,55 @@ export default function Skelbimas() {
   };
 
   // Skelbimo išsaugojimas
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
 
-    try {
-      const formData = new FormData();
-      Object.entries(newCar).forEach(([key, value]) => {
-        formData.append(key, value);
-      });
+  try {
+    const formData = new FormData();
+    Object.entries(newCar).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
 
-      // Įkeliamos nuotraukos
-      for (let i = 0; i < images.length; i++) {
-        formData.append("images", images[i]);
-      }
-
-      const res = await axios.post("http://localhost:4000/api/Autonamai/automobiliai", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      alert("Naujas skelbimas sėkmingai sukurtas!");
-      setNewCar({
-        model: "",
-        price: "",
-        color: "",
-        engine: "",
-        year: "",
-        gearBox: "",
-        fuelType: "",
-        power: "",
-      });
-      setImages([]);
-      console.log("Sukurta:", res.data);
-    } catch (error) {
-      console.error("Klaida kuriant skelbimą:", error);
-      alert("Nepavyko sukurti skelbimo.");
-    } finally {
-      setLoading(false);
+    for (let i = 0; i < images.length; i++) {
+      formData.append("images", images[i]);
     }
-  };
 
+    // 🔑 Gauti token iš localStorage
+    const token = localStorage.getItem("token");
+console.log("Token:", token);
+    // ✅ Įtraukti Authorization header
+    const res = await axios.post(
+      "http://localhost:4000/api/Autonamai/automobiliai",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    alert("Naujas skelbimas sėkmingai sukurtas!");
+    setNewCar({
+      model: "",
+      price: "",
+      color: "",
+      engine: "",
+      year: "",
+      gearBox: "",
+      fuelType: "",
+      power: "",
+    });
+    setImages([]);
+    console.log("Sukurta:", res.data);
+  } catch (error) {
+    console.error("Klaida kuriant skelbimą:", error);
+    alert("Nepavyko sukurti skelbimo.");
+  } finally {
+    setLoading(false);
+  }
+};
   if (!isAdmin) {
     return (
       <>

@@ -1,16 +1,18 @@
 import dotenv from 'dotenv'
+dotenv.config({ path: './.env' });
 import express from 'express'
 import masinosRoutes from './routes/masinos.js'
 import mongoose from 'mongoose'
 import userRoutes from './routes/user.js'
 import krepselisRoutes from './routes/krepselisRoutes.js'
 import uzsakymasRoutes from './routes/uzsakymasRoutes.js'
+import cors from 'cors'
 
-dotenv.config({ path: './.env' });
 
 
 //express app
 const app =express()
+app.use(cors({ origin: 'http://localhost:3000' }))
 //middleware
 app.use(express.json())
 app.use((req, res, next)=> {
