@@ -9,7 +9,8 @@ function Home(){
             try {
                 const response = await fetch("http://localhost:4000/api/Autonamai/automobiliai/top");
                 const data = await response.json();
-                setTopCars(data);
+                // setTopCars(data);
+                console.log("Fetched top cars:", data);
             } catch (error) {
                 console.error("Error fetching top cars:", error);
             }

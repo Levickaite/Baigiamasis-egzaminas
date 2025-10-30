@@ -1,6 +1,12 @@
 import express from 'express'
 import * as controller from '../controllers/controllers.js'
+
+//cloud
 import requireAuth from '../middleware/requireAuth.js'
+// use multer/cloudinary uploader from middleware
+import { upload } from '../middleware/upload.js';
+
+
 
 const router = express.Router()
 // router.use()
@@ -12,17 +18,23 @@ router.get('/:id', (req, res)=>{
 })
 // POST - sukurti naują automobilį
 // router.post('/', controller.createAutomobilis)
-router.post('/', requireAuth, (req, res, next) => {
-  if (req.user.role !== 'admin') {
-    return res.status(403).json({ message: 'Not authorized to add listings' });
-  }
+// Accept multiple images uploaded from the client under field name "images"
+router.post('/', requireAuth, 
+  upload.array('images', 6),
+  (req, res, next) => {
+  // if (req.user.role !== 'admin') {
+  //   return res.status(403).json({ message: 'Not authorized to add listings' });
+  // }
   next();
 }, controller.createAutomobilis);
 //PATCH - redaguoti vieną automobilį
 router.patch('/:id', controller.updateAutomobilis)
 //DELETE - ištrinti vieną automobilį
 router.delete('/:id', controller.deleteAutomobilis)
-export default router
 
 //top auto
 router.get('/top', controller.getTopAutomobiliai)
+
+
+
+export default router

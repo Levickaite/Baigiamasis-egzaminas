@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Skelbimai from './pages/Automobiliai';
+import Skelbimas from './pages/Skelbimas';
 import Uzsakymai from './pages/ManoUzsakymai';
 import Krepselis from './pages/Krepselis';
 import Login from './pages/Login';
@@ -17,7 +18,15 @@ function App() {
           <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/automobiliai" element={<Skelbimai />} />
+            <Route
+                  path="/automobiliai"
+                  element={
+                    <>
+                      <Skelbimai />
+                      <Skelbimas />
+                    </>
+                  }
+                />
             {/* jei turėsi dar puslapį su konkretaus automobilio informacija */}
             <Route path="/automobiliai/:id" element={<Skelbimai />} />
             <Route path="/krepselis" element={<Krepselis />} />
