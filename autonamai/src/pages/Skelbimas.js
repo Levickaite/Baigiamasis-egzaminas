@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Footer from "../components/Footer";
-import Header from "../components/Navbar";
+
 
 export default function Skelbimas() {
   const [newCar, setNewCar] = useState({
@@ -15,7 +14,7 @@ export default function Skelbimas() {
     power: "",
   });
   const [images, setImages] = useState([]);
-  const [isAdmin, setIsAdmin] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(null);
   const [loading, setLoading] = useState(false);
 
   // Patikrinam, ar prisijungęs administratorius
@@ -105,6 +104,7 @@ console.log("Token:", token);
       </>
     );
   }
+
 
   return (
     <>

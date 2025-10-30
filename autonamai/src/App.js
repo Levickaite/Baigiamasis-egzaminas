@@ -9,6 +9,7 @@ import Uzsakymai from './pages/ManoUzsakymai';
 import Krepselis from './pages/Krepselis';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import Automobilis from './pages/Automobilis';
 
 function App() {
   return (
@@ -23,12 +24,12 @@ function App() {
                   element={
                     <>
                       <Skelbimai />
-                      <Skelbimas />
+
                     </>
                   }
                 />
             {/* jei turėsi dar puslapį su konkretaus automobilio informacija */}
-            <Route path="/automobiliai/:id" element={<Skelbimai />} />
+            <Route path="/automobiliai/:id" element={<><Automobilis/> <Skelbimas /></>} />
             <Route path="/krepselis" element={<Krepselis />} />
             <Route path="/Prisijungti" element={<Login />} />
             <Route path="/Registruotis" element={<Signup />} />

@@ -189,9 +189,9 @@ function Skelbimai() {
             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "white"}>
             <h3>{car.model}</h3>
             <p>Kaina: €{car.price}</p>
-            {car.photo?.data ? (
+            {car.photo?.url ? (
               <img
-                src={`data:${car.photo.contentType};base64,${car.photo.data}`}
+                src={car.photo.url}
                 alt={car.model}
                 style={{ width: "200px" }}
               />

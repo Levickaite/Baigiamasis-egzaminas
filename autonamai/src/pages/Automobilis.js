@@ -2,8 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
-import Footer from "../components/Footer"
-import Header from "../components/Navbar"
+
 
 export default function Automobilis() {
   const { id } = useParams();
@@ -85,12 +84,12 @@ export default function Automobilis() {
 
   return (
     <>
-      <Header />
 
       <h2>Automobilio informacija</h2>
 
       {editMode ? (
         <div>
+          <img src={car.photo?.url} alt={car.model} style={{ width: "200px" }} ></img>
           <label>
             Modelis:
             <input type="text" name="model" value={editedCar.model} onChange={handleChange} />
@@ -150,7 +149,7 @@ export default function Automobilis() {
         </div>
       )}
 
-      <Footer />
+
     </>
   );
 }

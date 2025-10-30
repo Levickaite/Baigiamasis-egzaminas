@@ -22,9 +22,9 @@ router.get('/:id', (req, res)=>{
 router.post('/', requireAuth, 
   upload.array('images', 6),
   (req, res, next) => {
-  // if (req.user.role !== 'admin') {
-  //   return res.status(403).json({ message: 'Not authorized to add listings' });
-  // }
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ message: 'Not authorized to add listings' });
+  }
   next();
 }, controller.createAutomobilis);
 //PATCH - redaguoti vieną automobilį
