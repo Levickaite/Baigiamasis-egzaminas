@@ -1,5 +1,4 @@
 import dotenv from 'dotenv'
-dotenv.config({ path: './.env' });
 import express from 'express'
 import masinosRoutes from './routes/masinos.js'
 import mongoose from 'mongoose'
@@ -8,6 +7,7 @@ import krepselisRoutes from './routes/krepselisRoutes.js'
 import uzsakymasRoutes from './routes/uzsakymasRoutes.js'
 import cors from 'cors'
 
+dotenv.config({ path: './.env' });
 
 
 //express app

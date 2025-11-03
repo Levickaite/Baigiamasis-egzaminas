@@ -198,7 +198,7 @@ function Uzsakymai() {
                 padding: "10px",
                 borderRadius: "8px",
               }}
-            onClick={() => navigate(`/automobiliai/${car._id}`)} 
+            onClick={() => navigate(`/automobiliai/${car._id}`)}
             onMouseEnter={(e) =>
                 (e.currentTarget.style.backgroundColor = "#f5f5f5")
             }

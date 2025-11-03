@@ -24,6 +24,9 @@ export default function Automobilis() {
         const response = await axios.get(`http://localhost:4000/api/Autonamai/automobiliai/${id}`);
         setCar(response.data);
         setEditedCar(response.data);
+        console.log("Car data:", response?.data);
+        console.log(car);
+        
       } catch (error) {
         console.error("Klaida gaunant duomenis:", error);
       } finally {
@@ -31,6 +34,9 @@ export default function Automobilis() {
       }
     };
     fetchCar();
+    console.log("Fetching car with ID:", id);
+    
+    
   }, [id]);
 
   const handleChange = (e) => {
@@ -81,6 +87,7 @@ export default function Automobilis() {
   };
 
   if (loading) return <p>Kraunama...</p>;
+  if (!car) return <p>Automobilis nerastas.</p>;
 
   return (
     <>
@@ -89,10 +96,10 @@ export default function Automobilis() {
 
       {editMode ? (
         <div>
-          <img src={car.photo?.url} alt={car.model} style={{ width: "200px" }} ></img>
+          <img src={car.photo} alt={car.model} style={{ width: "200px" }} ></img>
           <label>
             Modelis:
-            <input type="text" name="model" value={editedCar.model} onChange={handleChange} />
+            <input type="text" name="model" value={editedCar.model || ""} onChange={handleChange} />
           </label>
           <br />
           <label>
@@ -135,6 +142,7 @@ export default function Automobilis() {
         </div>
       ) : (
         <div>
+          <img src={car.photo} alt={car.model} style={{ width: "200px" }} ></img>
           <p>Modelis: {car.model}</p>
           <p>Kaina: {car.price}</p>
           <p>Spalva: {car.color}</p>

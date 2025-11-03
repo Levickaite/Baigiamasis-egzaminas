@@ -26,12 +26,22 @@ function Skelbimai() {
         const data = await res.json();
         setCars(data);
         setFilteredCars(data);
+
+        const prices = data.map(car => car.price);
+        if(prices.length) setPriceRange([0, Math.max(...prices)]);
       } catch (err) {
         console.error("Error fetching cars:", err);
       }
     };
     fetchCars();
   }, []);
+
+  const uniqueModels = [...new Set(cars.map(car => car.model))];
+  const uniqueColors = [...new Set(cars.map(car => car.color))];
+  const uniqueEngines = [...new Set(cars.map(car => car.engine))];
+  const uniqueGearBoxes = [...new Set(cars.map(car => car.gearBox))];
+  const uniqueFuelTypes = [...new Set(cars.map(car => car.fuelType))];
+  const uniquePowers = [...new Set(cars.map(car => car.power))];
 
   // Filtering + sorting + search + transmission
   useEffect(() => {
@@ -106,7 +116,7 @@ function Skelbimai() {
         <input
           type="range"
           min="0"
-          max="100000"
+          max={Math.max(...cars.map(car => car.price), 100000)}
           step="100"
           value={priceRange[1]}
           onChange={(e) => setPriceRange([0, Number(e.target.value)])}
@@ -128,8 +138,7 @@ function Skelbimai() {
         <label>Modelis:</label>
         <select value={model} onChange={(e) => setModel(e.target.value)}>
           <option value="">Visi</option>
-          {/* <option value="Manual">Manual</option>
-          <option value="Automatic">Automatic</option> */}
+          {uniqueModels.map(m => <option key={m} value={m}>{m}</option>)}
         </select>
       </div>
       {/* Color Dropdown */}
@@ -137,10 +146,7 @@ function Skelbimai() {
         <label>Spalva:</label>
         <select value={color} onChange={(e) => setColor(e.target.value)}>
           <option value="">Visos</option>
-          <option value="Silver">Sidabrinė</option>
-          <option value="Black">Juoda</option>
-          <option value="White">Balta</option>
-          <option value="Red">Raudona</option>
+          {uniqueColors.map(c => <option key={c} value={c}>{c}</option>)}
         </select>
       </div>
       {/* Gear box Dropdown */}
@@ -148,8 +154,7 @@ function Skelbimai() {
         <label>Pavarų dėžė:</label>
         <select value={gearBox} onChange={(e) => setGearBox(e.target.value)}>
           <option value="">Visos</option>
-          <option value="Manual">Mechaninė</option>
-          <option value="Automatic">Automatinė</option>
+          {uniqueGearBoxes.map(g => <option key={g} value={g}>{g}</option>)}
         </select>
       </div>
       {/* Fuel Type Dropdown */}
@@ -157,8 +162,7 @@ function Skelbimai() {
         <label>Kuro tipas:</label>
         <select value={fuelType} onChange={(e) => setFuelType(e.target.value)}>
           <option value="">Visi</option>
-          <option value="Diesel">Dyzelis</option>
-          <option value="Petrol">Benzinas</option>
+          {uniqueFuelTypes.map(f => <option key={f} value={f}>{f}</option>)}
         </select>
       </div>
       {/* Engine Dropdown */}
@@ -166,8 +170,7 @@ function Skelbimai() {
         <label>Variklio tūris:</label>
         <select value={engine} onChange={(e) => setEngine(e.target.value)}>
           <option value="">Visi</option>
-          {/* <option value=""></option>
-          <option value=""></option> */}
+          {uniqueEngines.map(en => <option key={en} value={en}>{en}</option>)}
         </select>
       </div>
       {/* Power Dropdown */}
@@ -175,10 +178,26 @@ function Skelbimai() {
         <label>Variklio galingumas:</label>
         <select value={power} onChange={(e) => setPower(e.target.value)}>
           <option value="">Visi</option>
-          {/* <option value=""></option>
-          <option value=""></option> */}
+          {uniquePowers.map(p => <option key={p} value={p}>{p}</option>)}
         </select>
       </div>
+      <div style={{ margin: "10px 0" }}>
+          <button
+            onClick={() => {
+              setSearch("");
+              setPriceRange([0, Math.max(...cars.map(car => car.price), 100000)]);
+              setSort("");
+              setEngine("");
+              setModel("");
+              setColor("");
+              setGearBox("");
+              setFuelType("");
+              setPower("");
+            }}
+          >
+            Išvalyti filtrus
+          </button>
+        </div>
 
       {/* Cars list */}
       <div>
@@ -188,16 +207,16 @@ function Skelbimai() {
             onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#f7f7f7"}
             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "white"}>
             <h3>{car.model}</h3>
-            <p>Kaina: €{car.price}</p>
-            {car.photo?.url ? (
+            {car.photo ? (
               <img
-                src={car.photo.url}
-                alt={car.model}
-                style={{ width: "200px" }}
+              src={car.photo}
+              alt={car.model}
+              style={{ width: "200px" }}
               />
             ) : (
               <p>No photo</p>
             )}
+            <p>Kaina: €{car.price}</p>
           </div>
         ))}
       </div>
