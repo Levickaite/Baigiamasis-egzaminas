@@ -28,7 +28,7 @@ function Uzsakymai() {
           return;
         }
 
-        let url = "http://localhost:4000/api/Autonamai/uzsakymai";
+        let url = "http://localhost:4000/api/Autonamai/uzsakymas";
 
         // Fetch logic based on role
         if (user.role === "user") {

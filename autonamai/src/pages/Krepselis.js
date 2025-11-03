@@ -1,4 +1,3 @@
-
 import React, {useEffect, useState, useContext} from "react";
 import { AuthContext } from "../context/AuthContext";
 
@@ -6,6 +5,7 @@ const Krepselis = () => {
     const [cart, setCart] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [payLoading, setPayLoading] = useState(false);
     const { user } = useContext(AuthContext);
 
     const fetchCart = async () => {
@@ -52,6 +52,11 @@ const Krepselis = () => {
     if (error) return <p>Error: {error}</p>;
 
     const handlePay = async () => {
+        if (!user) {
+            alert('Turite būti prisijungęs, kad galėtumėte apmokėti.');
+            return;
+        }
+        setPayLoading(true);
         try {
             const res = await fetch("http://localhost:4000/api/Autonamai/uzsakymas/create", {
                 method: 'POST',
@@ -60,15 +65,28 @@ const Krepselis = () => {
                     'Authorization': `Bearer ${user.token}`
                 },
             });
-            const data = await res.json();
+
+            // read response as text then try parse JSON for robust debugging
+            const text = await res.text();
+            let data;
+            try {
+                data = JSON.parse(text);
+            } catch (e) {
+                data = { message: text };
+            }
+
             if (res.ok) {
                 alert("Užsakymas sėkmingai sukurtas!");
                 fetchCart();
             } else {
-                alert("Klaida kuriant užsakymą: " + data.error);
+                console.error('Order creation failed:', res.status, data);
+                alert("Klaida kuriant užsakymą: " + (data.error || data.message || res.statusText));
             }
         } catch (err) {
+            console.error('Network or unexpected error creating order:', err);
             alert("Klaida kuriant užsakymą: " + err.message);
+        } finally {
+            setPayLoading(false);
         }
     };
 
@@ -89,7 +107,7 @@ const Krepselis = () => {
                         </div>
                     ))}
                     <h2>Iš viso mokėti: {cart.visoMoketi} EUR</h2>
-                    <button onClick={handlePay}>Apmokėti</button>
+                    <button onClick={handlePay} disabled={payLoading}>{payLoading ? 'Apmokėjimas...' : 'Apmokėti'}</button>
                 </div>
             )}
         </div>
