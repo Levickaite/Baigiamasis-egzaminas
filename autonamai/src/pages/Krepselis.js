@@ -51,44 +51,61 @@ const Krepselis = () => {
     if (loading) return <p>Kraunama...</p>;
     if (error) return <p>Error: {error}</p>;
 
-    const handlePay = async () => {
-        if (!user) {
-            alert('Turite būti prisijungęs, kad galėtumėte apmokėti.');
-            return;
-        }
-        setPayLoading(true);
-        try {
-            const res = await fetch("http://localhost:4000/api/Autonamai/uzsakymas/create", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${user.token}`
-                },
-            });
+const handlePay = async () => {
+  if (!user) {
+    alert('Turite būti prisijungęs, kad galėtumėte apmokėti.');
+    return;
+  }
 
-            // read response as text then try parse JSON for robust debugging
-            const text = await res.text();
-            let data;
-            try {
-                data = JSON.parse(text);
-            } catch (e) {
-                data = { message: text };
-            }
+  setPayLoading(true);
 
-            if (res.ok) {
-                alert("Užsakymas sėkmingai sukurtas!");
-                fetchCart();
-            } else {
-                console.error('Order creation failed:', res.status, data);
-                alert("Klaida kuriant užsakymą: " + (data.error || data.message || res.statusText));
-            }
-        } catch (err) {
-            console.error('Network or unexpected error creating order:', err);
-            alert("Klaida kuriant užsakymą: " + err.message);
-        } finally {
-            setPayLoading(false);
-        }
-    };
+ try {
+     
+
+      const newOrder = {
+        prekes: cart.prekes.map((item) => ({
+          photo: item.automobilis.photo,
+          model: item.automobilis.model,
+          price: item.automobilis.price,
+          color: item.automobilis.color,
+          year: item.automobilis.year,
+          kiekis: item.kiekis,
+        })),
+        email: user.email,
+        status: "Nepatvirtinta",
+     };
+
+    const res = await fetch("http://localhost:4000/api/Autonamai/uzsakymas/create", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user.token}`
+      },
+      body: JSON.stringify(newOrder)
+    });
+
+    const text = await res.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      data = { message: text };
+    }
+
+    if (res.ok) {
+      alert("✅ Užsakymas sėkmingai sukurtas!");
+      fetchCart();
+    } else {
+      console.error('❌ Order creation failed:', res.status, data);
+      alert("Klaida kuriant užsakymą: " + (data.error || data.message || res.statusText));
+    }
+  } catch (err) {
+    console.error('❌ Network or unexpected error creating order:', err);
+    alert("Klaida kuriant užsakymą: " + err.message);
+  } finally {
+    setPayLoading(false);
+  }
+};
 
     return (
         <div>

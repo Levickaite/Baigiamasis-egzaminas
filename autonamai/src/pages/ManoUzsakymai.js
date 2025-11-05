@@ -14,6 +14,9 @@ function Uzsakymai() {
   const [fuelType, setFuelType] = useState("");
   const [power, setPower] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [user, setUser] = useState(null);
+  const [status, setStatus] = useState("");
+  
 
   const carsPerPage = 6;
   const navigate = useNavigate();
@@ -22,33 +25,39 @@ function Uzsakymai() {
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const user = JSON.parse(localStorage.getItem("user"));
-        if (!user) {
+        const storedUser = JSON.parse(localStorage.getItem("user"));
+        if (!storedUser) {
           console.error("User not found in localStorage.");
           return;
         }
+        setUser(storedUser);
 
         let url = "http://localhost:4000/api/Autonamai/uzsakymas";
 
-        // Fetch logic based on role
-        if (user.role === "user") {
-          // Only user's own cars
-          url += `?email=${encodeURIComponent(user.email)}`;
-        } else if (user.role === "admin") {
-          // Admin sees all cars except those with status "Laisvas"
+        if (storedUser.role === "user") {
+          url += `?email=${encodeURIComponent(storedUser.email)}`;
+        } else if (storedUser.role === "admin") {
           url += "?notStatus=Laisvas";
         }
 
-        const res = await fetch(url);
-        if (!res.ok) throw new Error("Failed to fetch data");
+        const token = localStorage.getItem("token");
+        const res = await fetch(url, {
+          headers: {
+            Authorization: token ? `Bearer ${token}` : undefined,
+          },
+        });
 
+        if (!res.ok) throw new Error("Failed to fetch data");
         const data = await res.json();
 
-        // If admin, also filter out status "Laisvas" in frontend (safety net)
+        const carsWithStatus = data.map((car) => ({
+        ...car,
+        status: car.status || "Laukiama",
+      }));
         const filteredData =
-          user.role === "admin"
-            ? data.filter((car) => car.status !== "Laisvas")
-            : data;
+          storedUser.role === "admin"
+            ? carsWithStatus.filter((car) => car.status !== "Laisvas")
+            : carsWithStatus;
 
         setCars(filteredData);
         setFilteredCars(filteredData);
@@ -60,23 +69,47 @@ function Uzsakymai() {
     fetchCars();
   }, []);
 
+  // 🟢 ADMIN: Change status
+  const handleStatusChange = async (carId, newStatus) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(
+        `http://localhost:4000/api/Autonamai/uzsakymas/${carId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token ? `Bearer ${token}` : undefined,
+          },
+          body: JSON.stringify({ status: newStatus }),
+        }
+      );
+
+      if (!res.ok) throw new Error("Failed to update status");
+
+      const updated = await res.json();
+      setCars((prev) =>
+        prev.map((car) => (car._id === updated._id ? updated : car))
+      );
+    } catch (err) {
+      console.error("Error updating status:", err);
+      alert("Nepavyko pakeisti statuso");
+    }
+  };
+
   // Filtering + sorting + search
   useEffect(() => {
     let result = [...cars];
-
-    // Filter by price
     result = result.filter(
       (car) => car.price >= priceRange[0] && car.price <= priceRange[1]
     );
 
-    // Search by model
     if (search.trim()) {
       result = result.filter((car) =>
         car.model?.toLowerCase().includes(search.toLowerCase())
       );
     }
 
-    // Filters
     if (model) result = result.filter((car) => car.model === model);
     if (color) result = result.filter((car) => car.color === color);
     if (engine) result = result.filter((car) => car.engine === engine);
@@ -84,19 +117,35 @@ function Uzsakymai() {
     if (fuelType) result = result.filter((car) => car.fuelType === fuelType);
     if (power) result = result.filter((car) => car.power === power);
 
-    // Sorting
     if (sort === "asc") result.sort((a, b) => a.price - b.price);
     if (sort === "desc") result.sort((a, b) => b.price - a.price);
-
+    if (status) result = result.filter((car) => car.status === status);
+    if (sort === "newest") result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    if (sort === "oldest") result.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
     setFilteredCars(result);
     setCurrentPage(1);
-  }, [search, priceRange, sort, engine, model, color, gearBox, fuelType, power, cars]);
+  }, [search, priceRange, sort, engine, model, color, gearBox, fuelType, power, cars, status]);
 
   // Pagination
   const indexOfLast = currentPage * carsPerPage;
   const indexOfFirst = indexOfLast - carsPerPage;
   const currentCars = filteredCars.slice(indexOfFirst, indexOfLast);
   const totalPages = Math.ceil(filteredCars.length / carsPerPage);
+
+  
+  // Helper for colored statuses
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Patvirtinta":
+        return "green";
+      case "Atmesta":
+        return "red";
+      case "Įvykdyta":
+        return "blue";
+      case "Laukiama":
+        return "gray";
+    }
+  };
 
   return (
     <div>
@@ -122,69 +171,30 @@ function Uzsakymai() {
           onChange={(e) => setPriceRange([0, Number(e.target.value)])}
         />
       </div>
-
+      {/* Status Filter */}
+      <div>
+        <label>Statusas: </label>
+        <select value={status} onChange={(e) => setStatus(e.target.value)}>
+          <option value="">Visi</option>
+          <option value="Laukiama">Laukiama</option>
+          <option value="Patvirtinta">Patvirtinta</option>
+          <option value="Atmesta">Atmesta</option>
+          <option value="Įvykdyta">Įvykdyta</option>
+        </select>
+      </div>
       {/* Sort */}
       <div>
-        <label>Rūšiuoti pagal kainą:</label>
+        <label>Rūšiuoti:</label>
         <select value={sort} onChange={(e) => setSort(e.target.value)}>
           <option value="">Nieko</option>
           <option value="asc">Maž → Didž</option>
           <option value="desc">Didž → Maž</option>
+          <option value="newest">Naujausi</option>
+          <option value="oldest">Seniausi</option>
         </select>
       </div>
 
-      {/* Filters */}
-      <div>
-        <label>Modelis:</label>
-        <select value={model} onChange={(e) => setModel(e.target.value)}>
-          <option value="">Visi</option>
-        </select>
-      </div>
-
-      <div>
-        <label>Spalva:</label>
-        <select value={color} onChange={(e) => setColor(e.target.value)}>
-          <option value="">Visos</option>
-          <option value="Silver">Sidabrinė</option>
-          <option value="Black">Juoda</option>
-          <option value="White">Balta</option>
-          <option value="Red">Raudona</option>
-        </select>
-      </div>
-
-      <div>
-        <label>Pavarų dėžė:</label>
-        <select value={gearBox} onChange={(e) => setGearBox(e.target.value)}>
-          <option value="">Visos</option>
-          <option value="Manual">Mechaninė</option>
-          <option value="Automatic">Automatinė</option>
-        </select>
-      </div>
-
-      <div>
-        <label>Kuro tipas:</label>
-        <select value={fuelType} onChange={(e) => setFuelType(e.target.value)}>
-          <option value="">Visi</option>
-          <option value="Diesel">Dyzelis</option>
-          <option value="Petrol">Benzinas</option>
-        </select>
-      </div>
-
-      <div>
-        <label>Variklio tūris:</label>
-        <select value={engine} onChange={(e) => setEngine(e.target.value)}>
-          <option value="">Visi</option>
-        </select>
-      </div>
-
-      <div>
-        <label>Variklio galingumas:</label>
-        <select value={power} onChange={(e) => setPower(e.target.value)}>
-          <option value="">Visi</option>
-        </select>
-      </div>
-
-      {/* Cars / Uzsakymai list */}
+      {/* Cars list */}
       <div>
         {currentCars.length === 0 ? (
           <p>Nerasta užsakymų.</p>
@@ -197,25 +207,57 @@ function Uzsakymai() {
                 margin: "10px",
                 padding: "10px",
                 borderRadius: "8px",
+                backgroundColor: "#fff",
               }}
-            onClick={() => navigate(`/automobiliai/${car._id}`)}
-            onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = "#f5f5f5")
-            }
-            onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = "white")
-            }
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.backgroundColor = "#f9f9f9")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.backgroundColor = "#fff")
+              }
             >
               <h3>{car.model}</h3>
               <p>Kaina: €{car.price}</p>
-              <p>Statusas: {car.status || "Nežinomas"}</p>
+              <p>Užsakymo data: {new Date(car.createdAt).toLocaleDateString()}</p>
+
+              {user?.role === "admin" ? (
+                
+                <div>
+                  <p>El. paštas: {car.email}
+                  </p>
+                  <label>Statusas: </label>
+                  <select
+                    value={car.status}
+                    onChange={(e) =>
+                      handleStatusChange(car._id, e.target.value)
+                    }
+                    style={{
+                      border: "1px solid #ccc",
+                      padding: "4px 8px",
+                      color: getStatusColor(car.status),
+                    }}
+                  >
+                    <option value="Laukiama">Laukiama</option>
+                    <option value="Patvirtinta">Patvirtinta</option>
+                    <option value="Atmesta">Atmesta</option>
+                    <option value="Įvykdyta">Įvykdyta</option>
+                  </select>
+                </div>
+              ) : (
+                <p>
+                  <strong>Statusas: </strong>
+                  <span style={{ color: getStatusColor(car.status) }}>
+                    {car.status || "Nežinomas"}
+                  </span>
+                </p>
+              )}
             </div>
           ))
         )}
       </div>
 
       {/* Pagination */}
-      <div>
+      <div style={{ marginTop: "1rem" }}>
         <button
           onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
           disabled={currentPage === 1}

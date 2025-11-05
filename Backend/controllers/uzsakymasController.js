@@ -21,7 +21,7 @@ export const createOrder = async (req, res) => {
                 color: automobilis.color,
                 year: automobilis.year,
                 email: userEmail,
-                status: 'Laukiama apmokėjimo'
+                status: 'Nepatvirtinta'
             });
             await newOrder.save();
             createdOrders.push(newOrder);
@@ -35,5 +35,34 @@ export const createOrder = async (req, res) => {
         res.status(201).json({ message: 'Užsakymas sėkmingai sukurtas', orders: createdOrders });
     } catch (error) {
         res.status(500).json({ error: error.message });
+    }
+};
+// Return orders. If requester is a regular user, return only their orders (by email).
+export const getUzsakymas = async (req, res)=>{
+    try {
+        // requireAuth middleware attaches req.user with fields: _id, role, email
+        const requester = req.user;
+        if (!requester) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+
+        const { notStatus, email: queryEmail } = req.query;
+
+        // Build base query
+        let query = {};
+
+        if (requester.role === 'user') {
+            // Regular users may only see their own orders
+            query.email = requester.email;
+        } else if (requester.role === 'admin') {
+            // Admin may optionally filter by email (query param) or exclude a status
+            if (queryEmail) query.email = queryEmail;
+            if (notStatus) query.status = { $ne: notStatus };
+        }
+
+        const uzsakymai = await Uzsakymas.find(query).sort({ createdAt: -1 });
+        res.status(200).json(uzsakymai);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
