@@ -16,10 +16,12 @@ function Uzsakymai() {
   const [currentPage, setCurrentPage] = useState(1);
   const [user, setUser] = useState(null);
   const [status, setStatus] = useState("");
-  
 
   const carsPerPage = 6;
   const navigate = useNavigate();
+
+  // normalizeStatus helper
+  const normalizeStatus = (s) => (s === undefined || s === null || s === "" ? "Laukiama" : s);
 
   // Fetch data based on role (user/admin)
   useEffect(() => {
@@ -33,7 +35,6 @@ function Uzsakymai() {
         setUser(storedUser);
 
         let url = "http://localhost:4000/api/Autonamai/uzsakymas";
-
         if (storedUser.role === "user") {
           url += `?email=${encodeURIComponent(storedUser.email)}`;
         } else if (storedUser.role === "admin") {
@@ -50,15 +51,19 @@ function Uzsakymai() {
         if (!res.ok) throw new Error("Failed to fetch data");
         const data = await res.json();
 
+        // Ensure every car object has a real status in state
         const carsWithStatus = data.map((car) => ({
-        ...car,
-        status: car.status || "Laukiama",
-      }));
+          ...car,
+          status: normalizeStatus(car.status),
+        }));
+
+        // If admin -> you were filtering out 'Laisvas' earlier; keep that behavior
         const filteredData =
           storedUser.role === "admin"
             ? carsWithStatus.filter((car) => car.status !== "Laisvas")
             : carsWithStatus;
 
+        // Set both arrays with normalized statuses
         setCars(filteredData);
         setFilteredCars(filteredData);
       } catch (err) {
@@ -88,9 +93,12 @@ function Uzsakymai() {
       if (!res.ok) throw new Error("Failed to update status");
 
       const updated = await res.json();
-      setCars((prev) =>
-        prev.map((car) => (car._id === updated._id ? updated : car))
-      );
+      // normalize the updated status coming from backend
+      const updatedNormalized = { ...updated, status: normalizeStatus(updated.status) };
+
+      // update cars and filteredCars arrays
+      setCars((prev) => prev.map((car) => (car._id === updatedNormalized._id ? updatedNormalized : car)));
+      setFilteredCars((prev) => prev.map((car) => (car._id === updatedNormalized._id ? updatedNormalized : car)));
     } catch (err) {
       console.error("Error updating status:", err);
       alert("Nepavyko pakeisti statuso");
@@ -100,14 +108,16 @@ function Uzsakymai() {
   // Filtering + sorting + search
   useEffect(() => {
     let result = [...cars];
+
+    // Price filter
     result = result.filter(
-      (car) => car.price >= priceRange[0] && car.price <= priceRange[1]
+      (car) => Number(car.price) >= priceRange[0] && Number(car.price) <= priceRange[1]
     );
 
+    // Search (model contains)
     if (search.trim()) {
-      result = result.filter((car) =>
-        car.model?.toLowerCase().includes(search.toLowerCase())
-      );
+      const q = search.toLowerCase();
+      result = result.filter((car) => (car.model || "").toLowerCase().includes(q));
     }
 
     if (model) result = result.filter((car) => car.model === model);
@@ -117,11 +127,17 @@ function Uzsakymai() {
     if (fuelType) result = result.filter((car) => car.fuelType === fuelType);
     if (power) result = result.filter((car) => car.power === power);
 
+    // When comparing status, treat undefined/null/"" as "Laukiama"
+    if (status) {
+      result = result.filter((car) => normalizeStatus(car.status) === status);
+    }
+
+    // Sorting
     if (sort === "asc") result.sort((a, b) => a.price - b.price);
     if (sort === "desc") result.sort((a, b) => b.price - a.price);
-    if (status) result = result.filter((car) => car.status === status);
-    if (sort === "newest") result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    if (sort === "oldest") result.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+    if (sort === "newest") result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    if (sort === "oldest") result.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
     setFilteredCars(result);
     setCurrentPage(1);
   }, [search, priceRange, sort, engine, model, color, gearBox, fuelType, power, cars, status]);
@@ -132,10 +148,10 @@ function Uzsakymai() {
   const currentCars = filteredCars.slice(indexOfFirst, indexOfLast);
   const totalPages = Math.ceil(filteredCars.length / carsPerPage);
 
-  
   // Helper for colored statuses
-  const getStatusColor = (status) => {
-    switch (status) {
+  const getStatusColor = (st) => {
+    const s = normalizeStatus(st);
+    switch (s) {
       case "Patvirtinta":
         return "green";
       case "Atmesta":
@@ -143,6 +159,7 @@ function Uzsakymai() {
       case "Įvykdyta":
         return "blue";
       case "Laukiama":
+      default:
         return "gray";
     }
   };
@@ -171,6 +188,7 @@ function Uzsakymai() {
           onChange={(e) => setPriceRange([0, Number(e.target.value)])}
         />
       </div>
+
       {/* Status Filter */}
       <div>
         <label>Statusas: </label>
@@ -182,6 +200,7 @@ function Uzsakymai() {
           <option value="Įvykdyta">Įvykdyta</option>
         </select>
       </div>
+
       {/* Sort */}
       <div>
         <label>Rūšiuoti:</label>
@@ -209,28 +228,21 @@ function Uzsakymai() {
                 borderRadius: "8px",
                 backgroundColor: "#fff",
               }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = "#f9f9f9")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = "#fff")
-              }
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f9f9f9")}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#fff")}
             >
               <h3>{car.model}</h3>
               <p>Kaina: €{car.price}</p>
               <p>Užsakymo data: {new Date(car.createdAt).toLocaleDateString()}</p>
 
               {user?.role === "admin" ? (
-                
                 <div>
-                  <p>El. paštas: {car.email}
-                  </p>
+                  <p>El. paštas: {car.email}</p>
                   <label>Statusas: </label>
                   <select
-                    value={car.status}
-                    onChange={(e) =>
-                      handleStatusChange(car._id, e.target.value)
-                    }
+                    // ensure the select shows the normalized status
+                    value={normalizeStatus(car.status)}
+                    onChange={(e) => handleStatusChange(car._id, e.target.value)}
                     style={{
                       border: "1px solid #ccc",
                       padding: "4px 8px",
@@ -247,7 +259,7 @@ function Uzsakymai() {
                 <p>
                   <strong>Statusas: </strong>
                   <span style={{ color: getStatusColor(car.status) }}>
-                    {car.status || "Nežinomas"}
+                    {normalizeStatus(car.status)}
                   </span>
                 </p>
               )}
@@ -258,10 +270,7 @@ function Uzsakymai() {
 
       {/* Pagination */}
       <div style={{ marginTop: "1rem" }}>
-        <button
-          onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-          disabled={currentPage === 1}
-        >
+        <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1}>
           Prieš
         </button>
         <span>

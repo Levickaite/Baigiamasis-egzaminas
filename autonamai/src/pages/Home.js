@@ -9,7 +9,7 @@ function Home(){
             try {
                 const response = await fetch("http://localhost:4000/api/Autonamai/automobiliai/top");
                 const data = await response.json();
-                // setTopCars(data);
+                setTopCars(data);
                 console.log("Fetched top cars:", data);
             } catch (error) {
                 console.error("Error fetching top cars:", error);
@@ -33,13 +33,17 @@ function Home(){
             <div className="favoriteSection">
                 <h2>Mėgstamiausi automobiliai</h2>
                 <div className="favoriteCars">
-                {topCars.map((car) => (
+                {topCars.length === 0 ? (
+                    <p>Kraunama...</p>
+                ) : (
+                    topCars.map((car) => (
                     <div key={car._id} className="car-card" onClick={() => handleCarClick(car._id)}>
                         <img src={car.photo} alt={car.model} />
                         <h3>{car.model}</h3>
                         <p>Kaina: {car.price} EUR</p>
                     </div>
-                ))}
+                    ))
+                )}
 
 
                 <button className="view-more-button" onClick={()=> navigate('/automobiliai')}>Visi automobiliai</button>

@@ -14,6 +14,8 @@ const router = express.Router()
 // router.use()
 //GET - paimti visus automobilius
 router.get('/', controller.getAutomobilis)
+//top auto
+router.get('/top', controller.getTopAutomobiliai)
 //GET - ppaimti vieną automobilį 
 router.get('/:id', async (req, res) => {
   try {
@@ -52,7 +54,6 @@ router.patch('/:id', controller.updateAutomobilis)
 router.delete('/:id', controller.deleteAutomobilis)
 
 //top auto
-router.get('/top', controller.getTopAutomobiliai)
 
 
 
