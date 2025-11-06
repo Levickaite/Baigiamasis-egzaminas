@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
-
+import "../Virgis.css";
 
 export default function Automobilis() {
   const { id } = useParams();
@@ -13,6 +13,19 @@ export default function Automobilis() {
   const [editedCar, setEditedCar] = useState({});
   const [photo, setPhoto] = useState(null);
   const { user } = useContext(AuthContext);
+  // Lightbox state for enlarging the car photo when clicked
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxPhoto, setLightboxPhoto] = useState(null);
+
+  // close lightbox on Escape key
+  useEffect(() => {
+    if (!lightboxOpen) return;
+    const onKey = (e) => {
+      if (e.key === "Escape") setLightboxOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightboxOpen]);
 
   useEffect(() => {
     if (user && user.role === "admin") setIsAdmin(true);
@@ -90,13 +103,21 @@ export default function Automobilis() {
   if (!car) return <p>Automobilis nerastas.</p>;
 
   return (
-    <>
+    <div className="automobilis-page">
 
       <h2>Automobilio informacija</h2>
 
       {editMode ? (
         <div>
-          <img src={car.photo} alt={car.model} style={{ width: "200px" }} ></img>
+          <img
+            src={car.photo}
+            alt={car.model}
+            className="car-photo"
+            onClick={() => {
+              setLightboxPhoto(car.photo);
+              setLightboxOpen(true);
+            }}
+          />
           <label>
             Modelis:
             <input type="text" name="model" value={editedCar.model || ""} onChange={handleChange} />
@@ -137,27 +158,86 @@ export default function Automobilis() {
             <input type="text" name="power" value={editedCar.power} onChange={handleChange} />
           </label>
           <br />
-          <button onClick={handleSave}>Išsaugoti</button>
-          <button onClick={() => setEditMode(false)}>Atšaukti</button>
+          <button className="btn-primary" onClick={handleSave}>Išsaugoti</button>
+          <button className="btn-secondary" onClick={() => setEditMode(false)}>Atšaukti</button>
         </div>
       ) : (
-        <div>
-          <img src={car.photo} alt={car.model} style={{ width: "200px" }} ></img>
-          <p>Modelis: {car.model}</p>
-          <p>Kaina: {car.price}</p>
-          <p>Spalva: {car.color}</p>
-          <p>Variklio tūris: {car.engine}</p>
-          <p>Metai: {car.year}</p>
-          <p>Pavarų dėžė: {car.gearBox}</p>
-          <p>Kuro tipas: {car.fuelType}</p>
-          <p>Galia: {car.power}</p>
+        <div className="car-card">
+          <div className="car-detail">
+            <div className="car-left">
+              <img
+                src={car.photo}
+                alt={car.model}
+                className="car-photo"
+                onClick={() => {
+                  setLightboxPhoto(car.photo);
+                  setLightboxOpen(true);
+                }}
+              />
+            </div>
 
-          {user && <button onClick={() => addToCart(id)}>Įdėti į krepšelį</button>}
-          {isAdmin && <button onClick={() => setEditMode(true)}>Redaguoti</button>}
+            <div className="car-center">
+              <h3 className="car-title">{car.model}</h3>
+
+              <div className="car-specs">
+                <div className="spec-line">
+                  <div className="spec">
+                    <div className="spec-label">Kaina</div>
+                    <div className="spec-value">{car.price}</div>
+                  </div>
+                  <div className="spec">
+                    <div className="spec-label">Metai</div>
+                    <div className="spec-value">{car.year}</div>
+                  </div>
+                  <div className="spec">
+                    <div className="spec-label">Kuro tipas</div>
+                    <div className="spec-value">{car.fuelType}</div>
+                  </div>
+                  <div className="spec">
+                    <div className="spec-label">Spalva</div>
+                    <div className="spec-value">{car.color}</div>
+                  </div>
+                </div>
+                <div className="spec-line">
+                  <div className="spec">
+                    <div className="spec-label">Pavarų dėžė</div>
+                    <div className="spec-value">{car.gearBox}</div>
+                  </div>
+                  <div className="spec">
+                    <div className="spec-label">Variklio tūris</div>
+                    <div className="spec-value">{car.engine}</div>
+                  </div>
+                  <div className="spec">
+                    <div className="spec-label">Galia</div>
+                    <div className="spec-value">{car.power}</div>
+                  </div>
+                </div>
+              </div>
+
+              
+            </div>
+            <div className="car-actions">
+              {user && (
+                <button onClick={() => addToCart(id)} className="btn-primary">Įdėti į krepšelį</button>
+              )}
+              {isAdmin && (
+                <button onClick={() => setEditMode(true)} className="btn-secondary">Redaguoti</button>
+              )}
+            </div>
+          </div>
         </div>
       )}
 
 
-    </>
+      {lightboxOpen && (
+        <div className="lightbox" onClick={() => setLightboxOpen(false)}>
+          <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
+            <button className="lightbox-close" onClick={() => setLightboxOpen(false)}>×</button>
+            <img src={lightboxPhoto} alt={car.model} />
+          </div>
+        </div>
+      )}
+
+    </div>
   );
 }

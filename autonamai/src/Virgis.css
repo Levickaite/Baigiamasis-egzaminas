@@ -1,0 +1,394 @@
+/* Styles for single car (Automobilis.js) page */
+:root{
+	--bg: #f6f8fb;
+	--card: #ffffff;
+	--muted: #6b7280;
+	--accent: #0ea5a4; /* teal */
+	--accent-dark: #0b8b89;
+	--radius: 12px;
+	--shadow: 0 6px 18px rgba(16,24,40,0.08);
+	--max-width: 1100px;
+}
+
+/* Scope page-specific base styles so other pages (home) are unaffected */
+.automobilis-page {
+	background: var(--bg);
+	color: #111827;
+	font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, 'Helvetica Neue', Arial;
+	padding: 12px 0; /* small vertical padding so the page content breathes */
+}
+
+/* The Automobilis page renders an h2 followed by the content div.
+	 We scope the styles to that pattern so other pages are unaffected. */
+.automobilis-page h2 {
+	text-align: center;
+	font-size: 1.9rem;
+	margin: 28px 16px 8px;
+	color: #0f172a;
+	letter-spacing: -0.02em;
+}
+
+.automobilis-page h2 + div {
+    display: block;
+    /* inner .car-detail grid handles layout (photo / center). */
+    align-items: normal;
+    justify-content: normal;
+	max-width: var(--max-width);
+	margin: 18px auto 48px;
+	padding: 22px;
+	background: linear-gradient(180deg, rgba(255,255,255,0.9), var(--card));
+	border-radius: var(--radius);
+	box-shadow: var(--shadow);
+}
+
+.automobilis-page h2 + div img:not(.car-photo) {
+	/* image now sized by .car-photo; keep a reasonable max width for other imgs that are NOT .car-photo */
+	max-width: 46%;
+	height: auto;
+	border-radius: 10px;
+	object-fit: cover;
+	box-shadow: 0 8px 30px rgba(2,6,23,0.06);
+	border: 1px solid rgba(15,23,42,0.04);
+}
+
+/* Info column (the sibling elements like p, buttons, inputs) */
+
+.automobilis-page h2 + div p {
+	margin: 8px 0;
+	color: #111827;
+	font-size: 1rem;
+}
+
+.automobilis-page h2 + div > p:first-of-type {
+	font-weight: 600;
+	font-size: 1.15rem;
+}
+
+/* Buttons inside the car detail */
+.automobilis-page h2 + div button {
+	display: inline-block;
+	padding: 10px 16px;
+	margin-top: 12px;
+	margin-right: 10px;
+	border: none;
+	border-radius: 10px;
+	cursor: pointer;
+	font-weight: 600;
+	color: white;
+	background: var(--accent);
+	transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+}
+
+.automobilis-page h2 + div button:hover{
+	transform: translateY(-2px);
+	background: var(--accent-dark);
+	box-shadow: 0 8px 18px rgba(11,139,137,0.12);
+}
+
+/* Secondary button (when present) */
+.automobilis-page h2 + div button + button{
+	background: #374151; /* slate-700 */
+}
+
+/* Inputs and labels when editMode is active */
+.automobilis-page h2 + div label{
+	display: block;
+	margin: 8px 0;
+	color: var(--muted);
+	font-size: 0.95rem;
+}
+
+.automobilis-page h2 + div input[type="text"],
+.automobilis-page h2 + div input[type="number"],
+.automobilis-page h2 + div input[type="email"],
+.automobilis-page h2 + div textarea{
+	width: 100%;
+	max-width: 380px;
+	padding: 8px 10px;
+	border-radius: 8px;
+	border: 1px solid rgba(15,23,42,0.06);
+	background: #fff;
+	box-shadow: 0 2px 6px rgba(2,6,23,0.03) inset;
+	margin-top: 6px;
+}
+
+/* Make layout responsive: stack on small screens */
+@media (max-width: 880px) {
+	.automobilis-page h2 + div {
+		flex-direction: column;
+		padding: 18px;
+	}
+	.automobilis-page h2 + div img {
+		max-width: 94%;
+		width: 100%;
+	}
+	.automobilis-page h2 + div input[type="text"]{
+		max-width: 100%;
+	}
+}
+
+@media (max-width: 420px) {
+	.automobilis-page h2 {
+		font-size: 1.5rem;
+	}
+	.automobilis-page h2 + div {
+		gap: 14px;
+		margin: 12px 12px 24px;
+	}
+	.automobilis-page h2 + div button {
+		padding: 10px 12px;
+		font-size: 0.95rem;
+	}
+}
+
+/* Small utility tweaks for consistent spacing (scoped to the automobilis page) */
+.automobilis-page h2 + div p + p{ margin-top:6px }
+
+/* clamp model/description to 2 lines with ellipsis */
+.car-description{
+	display: -webkit-box;
+	line-clamp: 2;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 100%;
+}
+
+/* Click-to-enlarge lightbox styles */
+.car-photo{
+	/* Card thumbnail: default target sizing; overridden inside .car-detail to fill available height */
+	height: 450px !important;
+	max-width: 750px !important;
+	width: auto;
+	cursor: zoom-in;
+	object-fit: cover;
+	transition: transform .14s ease, box-shadow .14s ease;
+}
+
+/* When inside the card grid, allow the photo to fill the combined row height so it reaches the card bottom */
+.car-detail .car-photo{
+	/* keep a reasonable visual height but don't force a shrinking 100% which can collapse
+	   when the grid row height is determined by smaller content. Use min-height so the
+	   image remains large and the left column visually matches the card height. */
+	min-height: 420px !important;
+	max-width: 100% !important;
+	width: 100%;
+	object-fit: cover;
+}
+
+/* New layout blocks for car-detail */
+.car-detail{
+	/* Use grid so buttons can be placed under the description (center column)
+	   Photo stays in left column, description in center; buttons in second row centered under center */
+	display: grid;
+	grid-template-columns: minmax(220px,46%) 1fr;
+	column-gap: 20px;
+	align-items: start;
+	width: 100%;
+	grid-template-rows: auto auto; /* first row for image+desc, second row for buttons */
+}
+.car-left{
+	grid-column: 1 / 2;
+	/* span both rows so the photo can reach the card bottom */
+	grid-row: 1 / 3;
+	display: flex;
+	/* align image to the bottom of the card */
+	align-items: flex-end;
+	justify-content: center;
+}
+.car-center{
+	grid-column: 2 / 3;
+	grid-row: 1 / 2;
+	display: flex;
+	flex-direction: column;
+	justify-content: center; /* vertically center title/specs */
+	align-items: center; /* horizontally center the content in the center column */
+	gap: 8px;
+	min-width: 180px;
+}
+.car-right{
+	grid-column: 2 / 3; /* place buttons under the center column */
+	grid-row: 2; /* explicitly put in second row */
+	display: flex;
+	flex-direction: column; /* stack buttons vertically */
+	gap: 12px;
+	align-items: center; /* center buttons under the description */
+	justify-content: flex-start;
+	margin-top: 12px;
+}
+
+/* New .car-actions: buttons under the description (used instead of .car-right) */
+.car-card{
+    display: flex;
+    flex-direction: column;
+}
+
+.car-actions{
+	display: flex;
+	flex-direction: row; /* place buttons side-by-side */
+	gap: 12px;
+	justify-content: center; /* center buttons horizontally at the bottom of the card */
+	align-items: center;
+	width: auto;
+	margin-top: 8px; /* raise buttons slightly closer to the description */
+	/* place inside the .car-detail grid second row under the center column */
+	grid-column: 2 / 3;
+	grid-row: 2 / 3;
+	justify-self: center;
+}
+
+.car-actions-wrapper{
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	padding-top: 12px;
+}
+
+.car-title{
+	margin: 0 0 10px 0;
+	font-size: 1.25rem;
+	font-weight: 700;
+	color: #6b0000; /* user requested title color */
+	text-align: center;
+	align-self: center; /* horizontally center the title between left and right columns */
+}
+.car-specs{ 
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+.spec-line{
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px 14px;
+	align-items: center;
+}
+.spec{
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	padding: 6px 10px;
+	background: transparent;
+	border-radius: 8px;
+}
+.spec-label{
+	font-size: 0.75rem;
+	color: var(--muted);
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+.spec-value{
+	font-size: 1rem;
+	color: #0f172a;
+	font-weight: 400; /* plain weight for values */
+	margin-top: 4px;
+}
+
+/* Make labels bold as requested */
+.spec-label{
+	font-weight: 700;
+}
+
+.btn-primary{
+	/* primary button styled to match requested brand color */
+	background: #6b0000;
+	color: #fff;
+	border-radius: 10px;
+	padding: 10px 12px;
+	border: none;
+	cursor: pointer;
+	font-weight: 600;
+}
+.btn-primary:hover{
+	background: #4e0000;
+}
+
+/* Ensure btn-primary wins over more specific selectors inside the card */
+.automobilis-page h2 + div .btn-primary {
+	background: #6b0000;
+}
+
+/* Scope lightbox to automobilis page to avoid conflicts and force target height */
+.automobilis-page .lightbox{
+	position: fixed;
+	inset: 0;
+	background: rgba(2,6,23,0.7);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1200;
+	padding: 24px;
+}
+.automobilis-page .lightbox-content{ position: relative; max-width: 96%; max-height: 96%; }
+.automobilis-page .lightbox img{
+	display: block;
+	max-width: 100%;
+	height: 600px !important; /* ensure enlarged target height */
+	width: auto;
+	max-height: calc(100vh - 80px);
+	border-radius: 10px;
+	box-shadow: 0 18px 50px rgba(2,6,23,0.6);
+	object-fit: contain;
+}
+.automobilis-page .lightbox-close{ position: absolute; right: -6px; top: -6px; }
+.btn-secondary{
+	background: #374151;
+	color: #fff;
+	border-radius: 10px;
+	padding: 10px 12px;
+	border: none;
+	cursor: pointer;
+	font-weight: 600;
+}
+.car-photo:hover{ transform: translateY(-4px) scale(1.01); }
+
+.lightbox{
+	position: fixed;
+	inset: 0;
+	background: rgba(2,6,23,0.7);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1200;
+	padding: 24px;
+}
+.lightbox-content{
+	position: relative;
+	max-width: 96%;
+	max-height: 96%;
+}
+.lightbox img{
+	display: block;
+	max-width: 100%;
+	/* enlarged image target height */
+	height: 600px;
+	width: auto;
+	max-height: calc(100vh - 80px);
+	border-radius: 10px;
+	box-shadow: 0 18px 50px rgba(2,6,23,0.6);
+	object-fit: contain;
+}
+.lightbox-close{
+	position: absolute;
+	right: -6px;
+	top: -6px;
+	background: #111827;
+	color: #fff;
+	border: none;
+	width: 38px;
+	height: 38px;
+	border-radius: 50%;
+	font-size: 20px;
+	cursor: pointer;
+	box-shadow: 0 6px 18px rgba(2,6,23,0.3);
+}
+
+@media (max-width: 880px) {
+	.automobilis-page .car-photo{ max-width: 94%; width: 100%; height: 300px !important; }
+	/* stack the grid into a single column on small screens */
+	.car-detail{ grid-template-columns: 1fr; grid-auto-rows: auto; }
+	.car-left, .car-center{ grid-column: 1 / -1; }
+	.car-actions{ flex-wrap: wrap; justify-content: center; margin-top: 12px; }
+}
+
