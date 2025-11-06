@@ -1,0 +1,334 @@
+.home-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: "Poppins", sans-serif;
+  color: #222;
+  background-color: #fff;
+}
+
+/* HERO SEKCIJA */
+.home-content {
+  position: relative;
+  width: 100%;
+  height: 450px;
+  overflow: hidden;
+}
+
+.main-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+    filter: brightness(0.6);
+    z-index: 1;
+  
+}
+
+.home-content h1 {
+  position: absolute;
+  bottom: 230px;
+  left: 100px;
+  font-size: 4.5rem;
+  color: #d8d8d8;
+  z-index: 2;
+  
+  
+  border-radius: 8px;
+  font-weight: 700;
+  
+}
+
+.home-content p {
+  position: absolute;
+  bottom: 200px;
+  left: 100px;
+  font-size: 1.5rem;
+  color: #d8d8d8;
+  
+  border-radius: 8px;
+    z-index: 2;
+  
+}
+
+/* MĖGSTAMIAUSI AUTOMOBILIAI */
+.favoriteSection {
+  width: 100%;
+  max-width: 1200px;
+  padding: 50px 20px;
+  text-align: center;
+}
+
+.favoriteSection h2 {
+  font-size: 1.8rem;
+  margin-bottom: 30px;
+  color: #6b0000;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.favoriteCars {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 25px;
+  justify-items: center;
+}
+
+.car-card {
+  background-color: #fafafa;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 15px;
+  width: 100%;
+  max-width: 270px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.car-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.car-card img {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.car-card h3 {
+  margin-top: 12px;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.car-card p {
+  color: #555;
+  margin-top: 5px;
+  font-size: 0.95rem;
+}
+
+/* MYGTUKAS */
+.view-more-button {
+  margin-top: 40px;
+  background-color: #6b0000;
+  color: #fff;
+  border: none;
+  padding: 12px 28px;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.view-more-button:hover {
+  background-color: #8a0000;
+}
+
+/* APIE MUS SEKCIJA */
+.about-us {
+  margin-top: 70px;
+  text-align: left;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.about-us h2 {
+  font-size: 1.6rem;
+  color: #6b0000;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.about-us p {
+  line-height: 1.6;
+  color: #333;
+  font-size: 1rem;
+}
+/*FOOTER*/
+
+.footer-logo img{
+  width: 150px;
+  height: auto;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.footer-links{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    justify-items: center;
+    gap: 8px;
+    padding: 20px;
+}
+.footer h3{
+    margin-bottom: 8px;
+    color: #6b0000;
+}
+.footer-column a{
+    display: block;
+    margin-bottom: 6px;
+    color: #222;
+    text-decoration: none;
+    
+}
+.footer-bottom{
+    text-align: center;
+    padding: 15px;
+    background-color: #6b0000;
+    color: #fff;
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
+
+.navigation{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding: 20px;
+}
+.logo h1{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #6b0000;
+    text-decoration: none;
+}
+.navigation img{
+width: 150px;
+  height: auto;
+  padding: 10px;
+}
+nav a{
+   display: inline-block;
+    padding: 10px;
+    text-decoration: none;
+    color: #6b0000;
+    
+}
+nav button{
+  
+  background-color: #6b0000;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin: 7px;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+nav button:hover {
+  background-color: #8a0000;
+}
+.menu-toggle{
+    display: none;
+}
+.signup{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 50vh;
+  gap: 10px;
+  padding: 20px;
+  margin-bottom: 100px;
+}
+.signup .signup-row{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.signup h3{
+    color: #6b0000;
+}
+.signup label{
+  width: 260px;
+  text-align: left;
+  margin: 0;
+  font-weight: 500;
+}
+.signup button{
+  background-color: #6b0000;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 10px;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.signup button:hover {
+  background-color: #8a0000;
+}
+.signup input{
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 250px;
+}
+.signup input:focus,
+.signup input:focus-visible,
+.signup input:active {
+   outline-color: #6b0000;
+  border-color: #6b0000; 
+  
+}
+.login{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 50vh;
+  gap: 10px;
+  padding: 20px;
+  margin-bottom: 100px;
+}
+.login .login-row{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.login h3{
+    color: #6b0000;
+}
+.login label{
+  width: 260px;
+  text-align: left;
+  margin: 0;
+  font-weight: 500;
+}
+.login button{
+  background-color: #6b0000;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 10px;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.login button:hover {
+  background-color: #8a0000;
+}
+.login input{
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 250px;
+}
+.login input:focus,
+.login input:focus-visible,
+.login input:active {
+   outline-color: #6b0000;
+  border-color: #6b0000; 
+  
+}

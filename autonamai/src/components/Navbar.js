@@ -2,6 +2,8 @@ import {Link} from 'react-router-dom';
 import { useLogout } from '../hooks/useLogout';
 import { useAuthContext } from '../hooks/useAuthContext';
 import {useState} from 'react';
+import React from 'react';
+import '../Indre.css';
 
 
 const Navbar = () => {
@@ -18,12 +20,13 @@ const Navbar = () => {
     return (
         <header>
             <div className="navigation">
-                <img src="/Image20251020205419.png" alt="AutoNamai Logo" />
+                <div className="logo">
 
                 <Link to ="/" onClick={() => setIsOpen(false)}>
-                    <h1>AutoNamai</h1>
+                <img src="/Image20251020205419.png" alt="AutoNamai Logo" />
+                    
                 </Link>
-
+                </div>
                 <nav className={isOpen ? 'open' : ''}>
                     {user && (
                         <div>

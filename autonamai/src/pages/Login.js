@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLogin } from "../hooks/useLogin";
 import { useNavigate } from "react-router-dom";
+import "../Indre.css";
 const Login = () =>{
     const [email, setEmail] = useState('')
     const navigate = useNavigate();

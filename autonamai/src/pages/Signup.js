@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useSignup } from "../hooks/useSignup";
 import { useNavigate } from "react-router-dom";
+import "../Indre.css";
 
 const Signup = () =>{
     const navigate = useNavigate();

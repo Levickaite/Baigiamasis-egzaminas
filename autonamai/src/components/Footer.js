@@ -1,15 +1,16 @@
 import {Link} from 'react-router-dom';
 import React from 'react';
+import '../Indre.css';
 
 const Footer = () => {
     return (
-        <footer>
+        <footer className='footer'>
             <div className="footer-content">
+                <div className="footer-links">
                 <div className="footer-logo">
                     <img src="/Image20251020205419.png" alt="AutoNamai Logo" />
-                    <h2>AutoNamai</h2>
+                    
                 </div>
-                <div className="footer-links">
                     <div className="footer-column">
                         <h3>Navigacija</h3>
                         <Link to="/">Pagrindinis</Link>
