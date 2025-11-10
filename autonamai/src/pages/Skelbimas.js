@@ -109,8 +109,6 @@ export default function Skelbimas() {
   if (!isAdmin) {
     return (
       <div style={{ padding: "40px", textAlign: "center" }}>
-        <h3>Prieiga ribota – tik administratoriai gali kurti skelbimus.</h3>
-        {error && <p style={{ color: "red" }}>{error}</p>}
       </div>
     );
   }

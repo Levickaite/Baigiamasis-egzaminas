@@ -165,46 +165,17 @@ function Uzsakymai() {
   };
 
   return (
-    <div>
-      {/* Search */}
-      <div>
+    <div className="automobiliai-page">
+      <div className="filter-top-bar">
+        <h1>Mano Užsakymai</h1>
         <input
           type="text"
           placeholder="Paieška"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          className="search-input"
         />
-      </div>
-
-      {/* Price Filter */}
-      <div>
-        <label>Didžiausia suma: {priceRange[1]}€</label>
-        <input
-          type="range"
-          min="0"
-          max="100000"
-          step="100"
-          value={priceRange[1]}
-          onChange={(e) => setPriceRange([0, Number(e.target.value)])}
-        />
-      </div>
-
-      {/* Status Filter */}
-      <div>
-        <label>Statusas: </label>
-        <select value={status} onChange={(e) => setStatus(e.target.value)}>
-          <option value="">Visi</option>
-          <option value="Laukiama">Laukiama</option>
-          <option value="Patvirtinta">Patvirtinta</option>
-          <option value="Atmesta">Atmesta</option>
-          <option value="Įvykdyta">Įvykdyta</option>
-        </select>
-      </div>
-
-      {/* Sort */}
-      <div>
-        <label>Rūšiuoti:</label>
-        <select value={sort} onChange={(e) => setSort(e.target.value)}>
+        <select value={sort} onChange={(e) => setSort(e.target.value)} className="select-input">
           <option value="">Nieko</option>
           <option value="asc">Maž → Didž</option>
           <option value="desc">Didž → Maž</option>
@@ -212,77 +183,92 @@ function Uzsakymai() {
           <option value="oldest">Seniausi</option>
         </select>
       </div>
-
-      {/* Cars list */}
-      <div>
-        {currentCars.length === 0 ? (
-          <p>Nerasta užsakymų.</p>
-        ) : (
-          currentCars.map((car) => (
-            <div
-              key={car._id}
-              style={{
-                border: "1px solid #ccc",
-                margin: "10px",
-                padding: "10px",
-                borderRadius: "8px",
-                backgroundColor: "#fff",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f9f9f9")}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#fff")}
-            >
-              <h3>{car.model}</h3>
-              <p>Kaina: €{car.price}</p>
-              <p>Užsakymo data: {new Date(car.createdAt).toLocaleDateString()}</p>
-
-              {user?.role === "admin" ? (
-                <div>
-                  <p>El. paštas: {car.email}</p>
-                  <label>Statusas: </label>
-                  <select
-                    // ensure the select shows the normalized status
-                    value={normalizeStatus(car.status)}
-                    onChange={(e) => handleStatusChange(car._id, e.target.value)}
-                    style={{
-                      border: "1px solid #ccc",
-                      padding: "4px 8px",
-                      color: getStatusColor(car.status),
-                    }}
-                  >
-                    <option value="Laukiama">Laukiama</option>
-                    <option value="Patvirtinta">Patvirtinta</option>
-                    <option value="Atmesta">Atmesta</option>
-                    <option value="Įvykdyta">Įvykdyta</option>
-                  </select>
-                </div>
-              ) : (
-                <p>
-                  <strong>Statusas: </strong>
-                  <span style={{ color: getStatusColor(car.status) }}>
-                    {normalizeStatus(car.status)}
-                  </span>
-                </p>
-              )}
-            </div>
-          ))
-        )}
+      <div className="uzsakymai-page">
+        <div className="filters-sidebar">
+          <div className="filter-group">
+            <label className="filter-label">Didžiausia suma: {priceRange[1]}€</label>
+            <input
+              type="range"
+              min="0"
+              max="100000"
+              step="100"
+              value={priceRange[1]}
+              onChange={(e) => setPriceRange([0, Number(e.target.value)])}
+              className="price-range"
+            />
+          </div>
+          <div className="filter-group">
+            <label className="filter-label">Statusas: </label>
+            <select value={status} onChange={(e) => setStatus(e.target.value)} className="select-input">
+              <option value="">Visi</option>
+              <option value="Laukiama">Laukiama</option>
+              <option value="Patvirtinta">Patvirtinta</option>
+              <option value="Atmesta">Atmesta</option>
+              <option value="Įvykdyta">Įvykdyta</option>
+            </select>
+          </div>
+        </div>
+        <div className="cars-grid">
+          {currentCars.length === 0 ? (
+            <p>Nerasta užsakymų.</p>
+          ) : (
+            currentCars.map((car) => (
+              <div
+                key={car._id}
+                className="car-card"
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f9f9f9")}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#fff")}
+              >
+                {car.photo ? (
+                <img src={car.photo} alt={car.model} className="car-image" />
+                ) : (
+                <p className="no-photo">No photo</p>
+                )}
+                <h3 className="car-model">{car.model}</h3>
+                <p className="car-price">Kaina: €{car.price}</p>
+                <p>Užsakymo data: {new Date(car.createdAt).toLocaleDateString()}</p>
+                {user?.role === "admin" ? (
+                  <div>
+                    <p>El. paštas: {car.email}</p>
+                    <label>Statusas: </label>
+                    <select
+                      value={normalizeStatus(car.status)}
+                      onChange={(e) => handleStatusChange(car._id, e.target.value)}
+                      style={{
+                        border: "1px solid #ccc",
+                        padding: "4px 8px",
+                        color: getStatusColor(car.status),
+                      }}
+                    >
+                      <option value="Laukiama">Laukiama</option>
+                      <option value="Patvirtinta">Patvirtinta</option>
+                      <option value="Atmesta">Atmesta</option>
+                      <option value="Įvykdyta">Įvykdyta</option>
+                    </select>
+                  </div>
+                ) : (
+                  <p>
+                    <strong>Statusas: </strong>
+                    <span style={{ color: getStatusColor(car.status) }}>
+                      {normalizeStatus(car.status)}
+                    </span>
+                  </p>
+                )}
+              </div>
+            ))
+          )}
+        </div>
       </div>
-
-      {/* Pagination */}
-      <div style={{ marginTop: "1rem" }}>
-        <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1}>
-          Prieš
-        </button>
-        <span>
-          {" "}
-          Puslapis {currentPage} iš {totalPages}{" "}
-        </span>
-        <button
-          onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-          disabled={currentPage === totalPages}
-        >
-          Kitas
-        </button>
+      <div className="pagination-container">
+        <div className="pagination">
+          <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1} className="page-button">
+            Prieš
+          </button>
+          <span className="page-info">Puslapis {currentPage} iš {totalPages}</span>
+          <button onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages} className="page-button">
+            Kitas
+          </button>
+        </div>
       </div>
     </div>
   );
