@@ -13,6 +13,7 @@ export default function Skelbimas() {
     power: "",
   });
   const [images, setImages] = useState([]);
+  const [fileLabel, setFileLabel] = useState("Nepasirinktas joks failas");
   const [isAdmin, setIsAdmin] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -54,7 +55,17 @@ export default function Skelbimas() {
 
   // Nuotraukų įkėlimas (kelios nuotraukos)
   const handleFileChange = (e) => {
-    setImages(e.target.files);
+    const files = e.target.files;
+    setImages(files);
+    if (!files || files.length === 0) {
+      setFileLabel("Nepasirinktas joks failas");
+      return;
+    }
+    if (files.length === 1) {
+      setFileLabel(files[0].name);
+    } else {
+      setFileLabel(`${files.length} failai pasirinkti`);
+    }
   };
 
   // Skelbimo išsaugojimas
@@ -117,10 +128,11 @@ export default function Skelbimas() {
 
   return (
     <div style={{ padding: "20px" }}>
-      <h2>Sukurti naują skelbimą</h2>
-      <form onSubmit={handleSubmit}>
+  <h2 className="skelbimas-title">Sukurti naują skelbimą</h2>
+  <form className="skelbimas-form" onSubmit={handleSubmit}>
         {/* Modelis */}
         <input
+          className="model-field"
           type="text"
           name="model"
           placeholder="Modelis"
@@ -131,6 +143,7 @@ export default function Skelbimas() {
 
         {/* Kaina */}
         <input
+          className="price-field"
           type="number"
           name="price"
           placeholder="Kaina"
@@ -140,7 +153,7 @@ export default function Skelbimas() {
         />
 
         {/* Spalva */}
-        <select name="color" value={newCar.color} onChange={handleChange} required>
+        <select className="color-field" name="color" value={newCar.color} onChange={handleChange} required>
           <option value="">Pasirinkite spalvą</option>
           <option value="Raudona">Raudona</option>
           <option value="Mėlyna">Mėlyna</option>
@@ -151,6 +164,7 @@ export default function Skelbimas() {
 
         {/* Variklis */}
         <input
+          className="engine-field"
           type="text"
           name="engine"
           placeholder="Variklis"
@@ -160,7 +174,7 @@ export default function Skelbimas() {
         />
 
         {/* Metai */}
-        <select name="year" value={newCar.year} onChange={handleChange} required>
+        <select className="year-field" name="year" value={newCar.year} onChange={handleChange} required>
           <option value="">Pasirinkite metus</option>
           {Array.from({ length: 30 }, (_, i) => {
             const year = 2025 - i;
@@ -173,14 +187,14 @@ export default function Skelbimas() {
         </select>
 
         {/* Pavarų dėžė */}
-        <select name="gearBox" value={newCar.gearBox} onChange={handleChange} required>
+        <select className="gearbox-field" name="gearBox" value={newCar.gearBox} onChange={handleChange} required>
           <option value="">Pasirinkite pavarų dėžę</option>
           <option value="Automatinė">Automatinė</option>
           <option value="Mechaninė">Mechaninė</option>
         </select>
 
         {/* Kuro tipas */}
-        <select name="fuelType" value={newCar.fuelType} onChange={handleChange} required>
+        <select className="fuel-field" name="fuelType" value={newCar.fuelType} onChange={handleChange} required>
           <option value="">Pasirinkite kuro tipą</option>
           <option value="Benzinas">Benzinas</option>
           <option value="Dyzelinas">Dyzelinas</option>
@@ -190,6 +204,7 @@ export default function Skelbimas() {
 
         {/* Galia */}
         <input
+          className="power-field"
           type="number"
           name="power"
           placeholder="Galia (AG)"
@@ -199,9 +214,13 @@ export default function Skelbimas() {
         />
 
         {/* Nuotraukos */}
-        <input type="file" multiple onChange={handleFileChange} />
+        <label className="file-input">
+          <span className="file-btn">Įkelti nuotrauką</span>
+          <input type="file" multiple onChange={handleFileChange} />
+          <span className="file-name">{fileLabel}</span>
+        </label>
 
-        <button type="submit" disabled={loading}>
+        <button type="submit" className="btn-primary" disabled={loading}>
           {loading ? "Kuriama..." : "Sukurti skelbimą"}
         </button>
       </form>

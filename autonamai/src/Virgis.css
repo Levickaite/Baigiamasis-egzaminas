@@ -1,13 +1,114 @@
-/* Styles for single car (Automobilis.js) page */
+/* Styles for single car (Automobilis.js) page and new listing (Skelbimas.js) page */
 :root{
 	--bg: #f6f8fb;
 	--card: #ffffff;
 	--muted: #6b7280;
-	--accent: #0ea5a4; /* teal */
-	--accent-dark: #0b8b89;
+	--accent: #8a0000; /* teal */
+	--accent-dark: #8a0000;
 	--radius: 12px;
 	--shadow: 0 6px 18px rgba(16,24,40,0.08);
 	--max-width: 1100px;
+}
+
+/* Styles for the new listing form (Skelbimas.js) */
+.skelbimas-page {
+    background: var(--bg);
+    color: #111827;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, 'Helvetica Neue', Arial;
+    padding: 24px 0;
+    min-height: calc(100vh - 200px);
+}
+
+.skelbimas-container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 32px;
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.skelbimas-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 32px;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+}
+
+.skelbimas-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-weight: 500;
+    color: #374151;
+}
+
+.form-group input,
+.form-group select {
+    padding: 10px 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: var(--accent);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(138, 0, 0, 0.1);
+}
+
+.image-upload {
+    grid-column: 1 / -1;
+    padding: 24px;
+    border: 2px dashed #e5e7eb;
+    border-radius: var(--radius);
+    text-align: center;
+}
+
+.submit-button {
+    grid-column: 1 / -1;
+    background: var(--accent);
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.submit-button:hover {
+    background: var(--accent-dark);
+}
+
+.error-message {
+    grid-column: 1 / -1;
+    color: #dc2626;
+    background: #fee2e2;
+    padding: 12px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.loading-message {
+    grid-column: 1 / -1;
+    color: var(--muted);
+    text-align: center;
+    padding: 12px;
 }
 
 /* Scope page-specific base styles so other pages (home) are unaffected */
@@ -341,6 +442,12 @@
 	cursor: pointer;
 	font-weight: 600;
 }
+
+.btn-secondary:hover{
+	background: #4b5563 !important;
+}
+
+
 .car-photo:hover{ transform: translateY(-4px) scale(1.01); }
 
 .lightbox{
@@ -391,4 +498,212 @@
 	.car-left, .car-center{ grid-column: 1 / -1; }
 	.car-actions{ flex-wrap: wrap; justify-content: center; margin-top: 12px; }
 }
+
+/* Styling for the Skelbimas form (create new listing) */
+.skelbimas-form{
+	max-width: 1200px;
+	margin: 18px auto 48px;
+	display: grid;
+	/* three columns on wide screens */
+	grid-template-columns: repeat(3, 1fr);
+	gap: 16px 24px;
+	align-items: start;
+	background: linear-gradient(180deg, rgba(255,255,255,0.98), #fff);
+	padding: 18px;
+	border-radius: 12px;
+	box-shadow: 0 6px 18px rgba(16,24,40,0.05);
+}
+
+.skelbimas-form input[type="text"],
+.skelbimas-form input[type="number"],
+.skelbimas-form select,
+.skelbimas-form input[type="file"]{
+	width: 100%;
+	padding: 10px 12px;
+	border-radius: 8px;
+	border: 1px solid rgba(15,23,42,0.08);
+	background: #fff;
+	box-shadow: 0 2px 6px rgba(2,6,23,0.03) inset;
+	font-size: 0.95rem;
+	color: #0f172a;
+	box-sizing: border-box;
+	min-width: 0; /* allow inputs to shrink inside grid cells */
+}
+
+.skelbimas-form input::placeholder{ color: #6b7280; }
+
+/* Make file input and submit button span full width */
+.skelbimas-form input[type="file"],
+.skelbimas-form button[type="submit"]{
+	grid-column: 1 / -1;
+}
+
+.skelbimas-form button[type="submit"]{
+	justify-self: center; /* center the submit button horizontally */
+	padding: 10px 16px;
+	border-radius: 10px;
+	border: none;
+	cursor: pointer;
+	background: #6b0000; /* primary */
+	color: #fff;
+	font-weight: 700;
+	width: auto; /* ensure button keeps its intrinsic width when centered */
+	height: 40px;
+}
+/* Ensure hover works specifically for the skelbimas submit button (and matches general primary hover) */
+.skelbimas-form .btn-primary{
+	transition: background .12s ease, transform .08s ease;
+}
+.skelbimas-form .btn-primary:hover{
+	background: #8a0000;
+	transform: translateY(-2px);
+}
+
+/* Heading for the Skelbimas page */
+.skelbimas-title{
+	text-align: center;
+	text-transform: uppercase;
+	color: #6b0000; /* match other titles */
+	letter-spacing: 0.02em;
+	margin-bottom: 12px;
+}
+
+/* Custom file input styling */
+.skelbimas-form .file-input{
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	grid-column: 1 / -1;
+}
+/* .skelbimas-form .file-input input[type="file"]{
+	hide native input but keep it accessible
+	position: absolute;
+	opacity: 0;
+	width: 0;
+	height: 0;
+} */
+
+
+
+
+.skelbimas-form .file-input {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	gap: 12px;
+	grid-column: 1 / -1;
+	cursor: pointer;
+}
+
+/* Paslepiame įkėlimo lauką, bet paliekame jį virš mygtuko */
+.skelbimas-form .file-input input[type="file"] {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+	cursor: pointer;
+}
+
+/* Mygtuko stilius */
+.skelbimas-form .file-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background: #374151;
+	color: #fff;
+	padding: 10px 16px;
+	border-radius: 10px;
+	border: none;
+	font-weight: 600;
+	font-size: 1rem;
+	line-height: 1;
+	height: 40px;
+	transition: background 0.15s ease, transform 0.1s ease;
+	pointer-events: none; /* leidžia input‘ui viršuje priimti click, bet hover ateina per label */
+}
+
+/* Hover veikia dabar, kai vartotojas užveda pelę ant label‘o */
+.skelbimas-form .file-input:hover .file-btn {
+	background: #4b5563; /* šviesesnis atspalvis */
+	transform: translateY(-1px);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.skelbimas-form .file-btn{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	/* use the same visual style as the .btn-primary (Įdėti į krepšelį) button */
+	background: #374151; /* primary */
+	color: #fff;
+	padding: 10px 16px;
+	border-radius: 10px;
+	cursor: pointer;
+	height: 20px;
+	border: none;
+	transition: background .12s ease, transform .08s ease;
+
+}
+.skelbimas-form .file-btn:hover{
+	/* lighten on hover so the button brightens slightly */
+	background: #7f0000;
+	transform: translateY(-1px);
+}
+
+
+
+
+
+
+.skelbimas-form .file-name{
+	color: #374151;
+	font-size: 0.95rem;
+}
+
+/* Make the file label itself clickable by positioning input over the button via the label */
+.skelbimas-form .file-input{ position: relative; }
+.skelbimas-form .file-input input[type="file"]{ position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+
+/* Explicit placement for 3-column layout */
+.skelbimas-form .model-field{ grid-column: 1 / 2; grid-row: 1; }
+.skelbimas-form .price-field{ grid-column: 2 / 3; grid-row: 1; }
+.skelbimas-form .color-field{ grid-column: 3 / 4; grid-row: 1; }
+.skelbimas-form .engine-field{ grid-column: 1 / 2; grid-row: 2; }
+.skelbimas-form .year-field{ grid-column: 2 / 3; grid-row: 2; }
+.skelbimas-form .gearbox-field{ grid-column: 3 / 4; grid-row: 2; }
+.skelbimas-form .fuel-field{ grid-column: 1 / 2; grid-row: 3; }
+.skelbimas-form .power-field{ grid-column: 2 / 3; grid-row: 3; }
+.skelbimas-form .file-input{ grid-column: 3 / 4; grid-row: 3; }
+
+/* Responsive: two columns on medium, single column on narrow screens */
+@media (max-width: 1100px) {
+	.skelbimas-form{ grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 780px){
+	.skelbimas-form{ grid-template-columns: 1fr; }
+	.skelbimas-form button[type="submit"]{ justify-self: center; width: 100%; }
+}
+
+/* small visual tweak: spacing under the heading when this form is used in same page */
+h2 + .skelbimas-form{ margin-top: 12px; }
 
