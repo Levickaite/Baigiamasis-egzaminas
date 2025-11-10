@@ -1,5 +1,6 @@
 import React, {useEffect, useState, useContext} from "react";
 import { AuthContext } from "../context/AuthContext";
+import "../Indre.css";
 
 const Krepselis = () => {
     const [cart, setCart] = useState(null);
@@ -7,6 +8,7 @@ const Krepselis = () => {
     const [error, setError] = useState(null);
     const [payLoading, setPayLoading] = useState(false);
     const { user } = useContext(AuthContext);
+    const [removingId, setRemovingId] = useState(null);
 
     const fetchCart = async () => {
         if (!user) {
@@ -34,7 +36,12 @@ const Krepselis = () => {
 
     const removeItem = async (automobilisId) => {
         if (!user) return;
-        await fetch("http://localhost:4000/api/Autonamai/krepselis/remove", {
+        const confirmDelete = window.confirm("Ar tikrai norite pašalinti šią prekę iš krepšelio?");
+        if (!confirmDelete) return;
+        
+        setRemovingId(automobilisId);
+        try {
+        const res = await fetch("http://localhost:4000/api/Autonamai/krepselis/remove", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -42,7 +49,16 @@ const Krepselis = () => {
             },
             body: JSON.stringify({ automobilisId }),
         });
-        fetchCart();
+        if(!res.ok){
+            throw new Error("Nepavyko pašalinti prekės iš krepšelio");
+        }
+
+        await fetchCart();
+        } catch (err) {
+            alert("Klaida pašalinant prekę: " + err.message);
+        } finally {
+            setRemovingId(null);
+        }
     }
     useEffect(() => {
         fetchCart();
@@ -108,12 +124,13 @@ const handlePay = async () => {
 };
 
     return (
-        <div>
+        <div className="krepselis-container">
             <h1>Jūsų Krepšelis</h1>
             {cart && cart.prekes.length === 0 ? (
-                <p>Krepšelyje nieko nėra</p>
+                <p className="empty-cart">Krepšelyje nieko nėra</p>
             ) : (
-                <div>
+                <>
+                <div className="krepselis-items">
                     {cart.prekes.map((item) => (
                         <div key={item.automobilis._id}>
                             <img src={item.automobilis.photo} alt={item.automobilis.model}  />
@@ -123,9 +140,12 @@ const handlePay = async () => {
                             <button onClick={() => removeItem(item.automobilis._id)}>Pašalinti</button>
                         </div>
                     ))}
+                </div>
+                <div className="total-section">
                     <h2>Iš viso mokėti: {cart.visoMoketi} EUR</h2>
                     <button onClick={handlePay} disabled={payLoading}>{payLoading ? 'Apmokėjimas...' : 'Apmokėti'}</button>
                 </div>
+                </>
             )}
         </div>
     );

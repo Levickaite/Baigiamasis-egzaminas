@@ -10,6 +10,7 @@ import Krepselis from './pages/Krepselis';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Automobilis from './pages/Automobilis';
+import Kontaktai from './pages/Kontaktai';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
             <Route path="/automobiliai/:id" element={<><Automobilis/> </>} />
             <Route path="/mano-uzsakymai" element={<Uzsakymai />} />
             <Route path="/krepselis" element={<Krepselis />} />
+            <Route path="/kontaktai" element={<Kontaktai />} />
             <Route path="/Prisijungti" element={<Login />} />
             <Route path="/Registruotis" element={<Signup />} />
           </Routes>

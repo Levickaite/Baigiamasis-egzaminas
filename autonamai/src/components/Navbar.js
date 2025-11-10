@@ -24,10 +24,18 @@ const Navbar = () => {
 
                 <Link to ="/" onClick={() => setIsOpen(false)}>
                 <img src="/Image20251020205419.png" alt="AutoNamai Logo" />
-                    
+
                 </Link>
                 </div>
-                <nav className={isOpen ? 'open' : ''}>
+                <button className="menu-toggle" onClick={toggleMenu}>
+                    <span className="hamburger"></span>
+                    <span className="hamburger"></span>
+                    <span className="hamburger"></span>
+                    <span className="hamburger"></span>
+
+
+                </button>
+                <nav className={isOpen ? 'active' : ''}>
                     {user && (
                         <div>
                             <Link to="/" onClick={() => setIsOpen(false)}>Pagrindinis</Link>
@@ -51,14 +59,6 @@ const Navbar = () => {
                             <Link to="/registruotis" onClick={() => setIsOpen(false)}>Registruotis</Link>
                         </div>
                     )}
-                    <button className="menu-toggle" onClick={toggleMenu}>
-                        <span className="hamburger"></span>
-                        <span className="hamburger"></span>
-                        <span className="hamburger"></span>
-                        <span className="hamburger"></span>
-                        
-
-                    </button>
                 </nav>
 
             </div>

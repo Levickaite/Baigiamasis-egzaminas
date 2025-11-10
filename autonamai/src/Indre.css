@@ -71,6 +71,7 @@
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 25px;
   justify-items: center;
+  
 }
 
 .car-card {
@@ -82,6 +83,9 @@
   max-width: 270px;
   transition: all 0.3s ease;
   cursor: pointer;
+  justify-content: center;
+  
+  align-items: center;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
@@ -174,6 +178,12 @@
     color: #222;
     text-decoration: none;
     
+}
+.footer-column a:hover{
+  text-decoration: underline;
+}
+.footer-column p{
+  margin: 6px;
 }
 .footer-bottom{
     text-align: center;
@@ -331,4 +341,354 @@ nav button:hover {
    outline-color: #6b0000;
   border-color: #6b0000; 
   
+}
+
+.krepselis-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: "Poppins", sans-serif;
+  color: #222;
+  
+}
+.krepselis-container h1{
+  font-size: 2.2rem;
+  color: #6b0000;
+ 
+  
+  text-transform: uppercase;
+
+}
+.krepselis-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 25px;
+  justify-items: center;
+
+}
+.krepselis-items img{
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  
+}
+.krepselis-items div{
+  background-color: #fafafa;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 15px;
+  width: 100%;
+  max-width: 270px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  
+  align-items: center;
+  
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.krepselis-items div:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+.krepselis-items h2{
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #6b0000;
+}
+.empty-cart{
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 80px;
+  
+  margin-top: 20px;
+}
+.krepselis-items p{
+  color: #555;
+  font-size: 1rem;
+  margin-bottom: 12px;
+}
+.krepselis-container button{
+  background-color: #6b0000;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.krepselis-container button:hover {
+  background-color: #8a0000;
+}
+.total-section{
+  margin-top: 50px;
+  text-align: center;
+}
+.kontaktai{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  margin: 0 auto;
+  max-width: 1200px;
+  
+
+}
+.kontaktai-header{
+  width: 100%;
+  max-width: 1200px;
+  align-self: stretch;
+  font-size: 1.2rem;
+  text-align: left;
+  color: #6b0000;
+  
+  text-transform: uppercase;
+  font-family: "Poppins", sans-serif;
+}
+.kontaktai p{
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+.kontaktai a{
+  color: #6b0000;
+  text-decoration: none;
+}
+.kontaktai a:hover{
+  text-decoration: underline;
+}
+.map-container{
+  margin-top: 20px;
+  margin-bottom: 50px;
+  
+  
+  border-radius: 8px;
+  
+}
+
+
+
+
+/* Planšetės ir mažesni ekranai */
+@media (max-width: 1024px) {
+  .home-content h1 {
+    font-size: 3.5rem;
+    bottom: 200px;
+    left: 60px;
+  }
+
+  .home-content p {
+    font-size: 1.2rem;
+    bottom: 170px;
+    left: 60px;
+  }
+
+  .favoriteCars {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .krepselis-items {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .about-us {
+    padding: 0 30px;
+  }
+
+  .footer-links {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer-column {
+    margin-bottom: 15px;
+  }
+}
+
+/* Telefonai */
+@media (max-width: 768px) {
+  /* HERO sekcija */
+  .home-content {
+    height: 350px;
+  }
+
+  .home-content h1 {
+    font-size: 2.4rem;
+    bottom: 180px;
+    left: 30px;
+  }
+
+  .home-content p {
+    font-size: 1rem;
+    bottom: 150px;
+    left: 30px;
+  }
+
+  /* Mygtukai ir kortelės */
+  .view-more-button {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+
+  .car-card img {
+    width: 130px;
+    height: 130px;
+  }
+
+  .favoriteSection {
+    padding: 30px 15px;
+  }
+
+  /* Apie mus */
+  .about-us {
+    padding: 0 20px;
+  }
+
+  /* Formos */
+  .signup, .login {
+    height: auto;
+    padding: 30px 10px;
+  }
+
+  .signup label,
+  .login label {
+    width: 200px;
+    font-size: 0.9rem;
+  }
+
+  .signup input,
+  .login input {
+    width: 200px;
+  }
+
+  /* Kontaktai */
+  .kontaktai {
+    padding: 10px;
+  }
+
+  .kontaktai-header {
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  /* Footer */
+  .footer-links {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 15px;
+    text-align: center;
+  }
+
+  .footer-column a,
+  .footer-column p {
+    margin: 6px 0;
+  }
+
+  /* NAVIGACIJA + HAMBURGER */
+  .menu-toggle {
+    display: block;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 10px;
+    margin-right: 10px;
+  }
+
+  .hamburger, .menu-toggle .hamburger, .menu-toggle span.hamburger {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: #6b0000;
+    margin: 4px 0;
+    transition: 0.3s;
+  }
+  .navigation{
+    position: relative;
+    z-index: 1000;
+  }
+
+  nav {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    position: absolute;
+    top: 70px;
+    right: 0;
+    width: 100%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 100;
+  }
+
+  nav.active {
+    display: flex;
+  }
+
+  nav a, nav button {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+    color: #6b0000;
+    border-top: 1px solid #eee;
+  }
+
+  nav button {
+    background-color: #6b0000;
+    color: #fff;
+    border-radius: 0;
+  }
+
+  .logo img {
+    width: 120px;
+  }
+}
+
+/* Mažiausi ekranai (iki 480px) */
+@media (max-width: 480px) {
+  .home-content h1 {
+    font-size: 1.8rem;
+    bottom: 160px;
+    left: 20px;
+  }
+
+  .home-content p {
+    font-size: 0.9rem;
+    bottom: 130px;
+    left: 20px;
+  }
+
+  .favoriteSection h2 {
+    font-size: 1.4rem;
+  }
+
+  .car-card {
+    max-width: 220px;
+  }
+
+  .signup input,
+  .login input {
+    width: 180px;
+  }
+
+  .footer-bottom {
+    font-size: 0.8rem;
+  }
+}
+
+/* Desktop hamburgerio paslėpimas */
+@media (min-width: 769px) {
+  .menu-toggle {
+    display: none;
+  }
 }
