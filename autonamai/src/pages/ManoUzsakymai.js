@@ -21,7 +21,8 @@ function Uzsakymai() {
   const navigate = useNavigate();
 
   // normalizeStatus helper
-  const normalizeStatus = (s) => (s === undefined || s === null || s === "" ? "Laukiama" : s);
+  const normalizeStatus = (s) =>
+    s === undefined || s === null || s === "" ? "Laukiama" : s;
 
   // Fetch data based on role (user/admin)
   useEffect(() => {
@@ -51,19 +52,16 @@ function Uzsakymai() {
         if (!res.ok) throw new Error("Failed to fetch data");
         const data = await res.json();
 
-        // Ensure every car object has a real status in state
         const carsWithStatus = data.map((car) => ({
           ...car,
           status: normalizeStatus(car.status),
         }));
 
-        // If admin -> you were filtering out 'Laisvas' earlier; keep that behavior
         const filteredData =
           storedUser.role === "admin"
             ? carsWithStatus.filter((car) => car.status !== "Laisvas")
             : carsWithStatus;
 
-        // Set both arrays with normalized statuses
         setCars(filteredData);
         setFilteredCars(filteredData);
       } catch (err) {
@@ -74,52 +72,28 @@ function Uzsakymai() {
     fetchCars();
   }, []);
 
-  // 🟢 ADMIN: Change status
+  // 🟢 ADMIN: Change status + auto delete if Įvykdyta
   const handleStatusChange = async (carId, newStatus) => {
     try {
       const token = localStorage.getItem("token");
+      const headers = {
+        "Content-Type": "application/json",
+      };
+      if (token) headers.Authorization = `Bearer ${token}`;
+
       const res = await fetch(
         `http://localhost:4000/api/Autonamai/uzsakymas/${carId}`,
         {
           method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token ? `Bearer ${token}` : undefined,
-          },
+          headers,
           body: JSON.stringify({ status: newStatus }),
         }
       );
 
       if (!res.ok) throw new Error("Failed to update status");
-
       const updated = await res.json();
       // normalize the updated status coming from backend
       const updatedNormalized = { ...updated, status: normalizeStatus(updated.status) };
-
-      let carUpdate= {}
-
-      if (newStatus === "Įvykdyta") {
-      carUpdate = { parduotas: true, rezervuotas: false };
-    } else if (newStatus === "Patvirtinta" || newStatus === "Laukiama") {
-      carUpdate = { rezervuotas: true, parduotas: false };
-    } else {
-      carUpdate = { rezervuotas: false, parduotas: false };
-    }
-
-    // Užsakymo objekte turėtų būti nuoroda į automobilį (pvz. car.automobilis)
-    if (updatedNormalized.automobilis?._id) {
-      await fetch(
-        `http://localhost:4000/api/Autonamai/automobiliai/${updatedNormalized.automobilis._id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token ? `Bearer ${token}` : undefined,
-          },
-          body: JSON.stringify(carUpdate),
-        }
-      );
-    }
 
       // update cars and filteredCars arrays
       setCars((prev) => prev.map((car) => (car._id === updatedNormalized._id ? updatedNormalized : car)));
@@ -134,15 +108,16 @@ function Uzsakymai() {
   useEffect(() => {
     let result = [...cars];
 
-    // Price filter
     result = result.filter(
-      (car) => Number(car.price) >= priceRange[0] && Number(car.price) <= priceRange[1]
+      (car) =>
+        Number(car.price) >= priceRange[0] && Number(car.price) <= priceRange[1]
     );
 
-    // Search (model contains)
     if (search.trim()) {
       const q = search.toLowerCase();
-      result = result.filter((car) => (car.model || "").toLowerCase().includes(q));
+      result = result.filter((car) =>
+        (car.model || "").toLowerCase().includes(q)
+      );
     }
 
     if (model) result = result.filter((car) => car.model === model);
@@ -152,16 +127,18 @@ function Uzsakymai() {
     if (fuelType) result = result.filter((car) => car.fuelType === fuelType);
     if (power) result = result.filter((car) => car.power === power);
 
-    // When comparing status, treat undefined/null/"" as "Laukiama"
     if (status) {
-      result = result.filter((car) => normalizeStatus(car.status) === status);
+      result = result.filter(
+        (car) => normalizeStatus(car.status) === status
+      );
     }
 
-    // Sorting
     if (sort === "asc") result.sort((a, b) => a.price - b.price);
     if (sort === "desc") result.sort((a, b) => b.price - a.price);
-    if (sort === "newest") result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    if (sort === "oldest") result.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    if (sort === "newest")
+      result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    if (sort === "oldest")
+      result.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
     setFilteredCars(result);
     setCurrentPage(1);
@@ -200,7 +177,11 @@ function Uzsakymai() {
           onChange={(e) => setSearch(e.target.value)}
           className="search-input"
         />
-        <select value={sort} onChange={(e) => setSort(e.target.value)} className="select-input">
+        <select
+          value={sort}
+          onChange={(e) => setSort(e.target.value)}
+          className="select-input"
+        >
           <option value="">Nieko</option>
           <option value="asc">Maž → Didž</option>
           <option value="desc">Didž → Maž</option>
@@ -208,23 +189,32 @@ function Uzsakymai() {
           <option value="oldest">Seniausi</option>
         </select>
       </div>
+
       <div className="uzsakymai-page">
         <div className="filters-sidebar">
           <div className="filter-group">
-            <label className="filter-label">Didžiausia suma: {priceRange[1]}€</label>
+            <label className="filter-label">
+              Didžiausia suma: {priceRange[1]}€
+            </label>
             <input
               type="range"
               min="0"
               max="100000"
               step="100"
               value={priceRange[1]}
-              onChange={(e) => setPriceRange([0, Number(e.target.value)])}
+              onChange={(e) =>
+                setPriceRange([0, Number(e.target.value)])
+              }
               className="price-range"
             />
           </div>
           <div className="filter-group">
             <label className="filter-label">Statusas: </label>
-            <select value={status} onChange={(e) => setStatus(e.target.value)} className="select-input">
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="select-input"
+            >
               <option value="">Visi</option>
               <option value="Laukiama">Laukiama</option>
               <option value="Patvirtinta">Patvirtinta</option>
@@ -233,6 +223,7 @@ function Uzsakymai() {
             </select>
           </div>
         </div>
+
         <div className="cars-grid">
           {currentCars.length === 0 ? (
             <p>Nerasta užsakymų.</p>
@@ -241,24 +232,33 @@ function Uzsakymai() {
               <div
                 key={car._id}
                 className="car-card"
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f9f9f9")}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#fff")}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#f9f9f9")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#fff")
+                }
               >
                 {car.photo ? (
-                <img src={car.photo} alt={car.model} className="car-image" />
+                  <img src={car.photo} alt={car.model} className="car-image" />
                 ) : (
-                <p className="no-photo">No photo</p>
+                  <p className="no-photo">No photo</p>
                 )}
                 <h3 className="car-model">{car.model}</h3>
                 <p className="car-price">Kaina: €{car.price}</p>
-                <p>Užsakymo data: {new Date(car.createdAt).toLocaleDateString()}</p>
+                <p>
+                  Užsakymo data:{" "}
+                  {new Date(car.createdAt).toLocaleDateString()}
+                </p>
                 {user?.role === "admin" ? (
                   <div>
                     <p>El. paštas: {car.email}</p>
                     <label>Statusas: </label>
                     <select
                       value={normalizeStatus(car.status)}
-                      onChange={(e) => handleStatusChange(car._id, e.target.value)}
+                      onChange={(e) =>
+                        handleStatusChange(car._id, e.target.value)
+                      }
                       style={{
                         border: "1px solid #ccc",
                         padding: "4px 8px",
@@ -284,13 +284,24 @@ function Uzsakymai() {
           )}
         </div>
       </div>
+
       <div className="pagination-container">
         <div className="pagination">
-          <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1} className="page-button">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+            disabled={currentPage === 1}
+            className="page-button"
+          >
             Prieš
           </button>
-          <span className="page-info">Puslapis {currentPage} iš {totalPages}</span>
-          <button onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages} className="page-button">
+          <span className="page-info">
+            Puslapis {currentPage} iš {totalPages}
+          </span>
+          <button
+            onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className="page-button"
+          >
             Kitas
           </button>
         </div>

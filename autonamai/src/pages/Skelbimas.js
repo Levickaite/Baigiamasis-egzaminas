@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import { AuthContext } from "../context/AuthContext";
 
 export default function Skelbimas() {
+  const { user } = useContext(AuthContext);
   const [newCar, setNewCar] = useState({
     model: "",
     price: "",
@@ -14,38 +16,7 @@ export default function Skelbimas() {
   });
   const [images, setImages] = useState([]);
   const [fileLabel, setFileLabel] = useState("Nepasirinktas joks failas");
-  const [isAdmin, setIsAdmin] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  // Patikrinam, ar prisijungęs administratorius
-  const fetchUser = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setError("Turite būti prisijungęs.");
-        setIsAdmin(false);
-        return;
-      }
-
-      const res = await axios.get("http://localhost:4000/api/Autonamai/useriai", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (res.data.role === "admin") setIsAdmin(true);
-      else {
-        setIsAdmin(false);
-        setError("Tik administratorius gali kurti naujus skelbimus.");
-      }
-    } catch (err) {
-      setIsAdmin(false);
-      setError("Nepavyko patikrinti vartotojo rolės: " + err.message);
-    }
-  };
-
-  useEffect(() => {
-    fetchUser();
-  }, []);
 
   // Duomenų įvedimo valdymas
   const handleChange = (e) => {
@@ -117,11 +88,9 @@ export default function Skelbimas() {
     }
   };
 
-  if (!isAdmin) {
+  if (!user || user.role === 'user') {
     return (
       <div style={{ padding: "40px", textAlign: "center" }}>
-        <h3>Prieiga ribota – tik administratoriai gali kurti skelbimus.</h3>
-        {error && <p style={{ color: "red" }}>{error}</p>}
       </div>
     );
   }

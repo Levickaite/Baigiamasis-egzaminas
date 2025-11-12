@@ -91,11 +91,14 @@
 /* Main content (cars grid) */
 .cars-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.8rem;
-  flex: 1; /* take remaining space */
+  grid-template-columns: repeat(3, 1fr); /* 3 cards per row */
+  grid-template-rows: repeat(2, 1fr);  /* 2 rows */
+  gap: 3rem;
+
   margin-top: 0; /* optional: remove top margin since spacing handled by flex gap */
   justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 /* Car card styles */
