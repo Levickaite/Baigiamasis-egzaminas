@@ -8,6 +8,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthContextProvider } from './context/AuthContext';
+import axios from "axios";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

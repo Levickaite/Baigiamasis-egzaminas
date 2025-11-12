@@ -59,13 +59,11 @@ export default function Automobilis() {
 
   const handleSave = async () => {
     try {
- 
-
-      const response = await axios.put(
+      const response = await axios.patch(
         `http://localhost:4000/api/Autonamai/automobiliai/${id}`,
         editedCar
       );
-      setCar(response.data.updatedCar);
+      setCar(response.data); // always use response.data
       setEditMode(false);
       alert("Automobilio duomenys atnaujinti sėkmingai.");
     } catch (error) {
@@ -99,8 +97,24 @@ export default function Automobilis() {
     }
   };
 
+  const handleDelete = async () => {
+    if (!window.confirm("Ar tikrai norite ištrinti šį automobilį?")) return;
+    try {
+      const response = await axios.delete(`http://localhost:4000/api/Autonamai/automobiliai/${id}`);
+      if (response.status === 200) {
+        alert("Automobilis sėkmingai ištrintas.");
+        window.location.href = "/automobiliai";
+      } else {
+        alert("Nepavyko ištrinti automobilio.");
+      }
+    } catch (error) {
+      console.error("Klaida trinant automobilį:", error);
+      alert("Klaida trinant automobilį.");
+    }
+  };
+
   if (loading) return <p>Kraunama...</p>;
-  if (!car) return <p>Automobilis nerastas.</p>;
+  if (!car || !car.model) return <p>Automobilis nerastas.</p>;
 
   return (
     <div className="automobilis-page">
@@ -221,7 +235,10 @@ export default function Automobilis() {
                 <button onClick={() => addToCart(id)} className="btn-primary">Įdėti į krepšelį</button>
               )}
               {isAdmin && (
-                <button onClick={() => setEditMode(true)} className="btn-secondary">Redaguoti</button>
+                <>
+                  <button onClick={() => setEditMode(true)} className="btn-secondary">Redaguoti</button>
+                  <button onClick={handleDelete} className="btn-secondary" style={{marginLeft: '1rem'}}>Ištrinti</button>
+                </>
               )}
             </div>
           </div>
