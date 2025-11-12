@@ -41,7 +41,12 @@ function Home(){
                     <div key={car._id} className="car-card" onClick={() => handleCarClick(car._id)}>
                         <img src={car.photo} alt={car.model} />
                         <h3>{car.model}</h3>
-                        <p>Kaina: {car.price} EUR</p>
+                        <p className="car-year">Metai: {car.year}</p>
+                        <p className="car-fuel">Kuro tipas: {car.fuelType}</p>
+                        <p className="car-power">Galia: {car.power} kW</p>
+                        <p className="car-gearbox">Pavarų dėžė: {car.gearBox}</p>
+                        <p className="car-price" ><strong>Kaina: €{car.price} </strong></p>
+                        
                     </div>
                     ))
                 )}

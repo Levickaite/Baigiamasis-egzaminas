@@ -49,7 +49,16 @@ const automobilisSchema = new Schema ({
     traffic: {
         type: Number,
         default: 0
-    }
+    },
+    parduotas: {
+        type: Boolean,
+        default: false
+    },
+    rezervuotas: {
+        type: Boolean,
+        default: false
+    },
+    
 // pridedu traffico sekimą, kad home page galima būtų rodyt populiariausius
 })
 

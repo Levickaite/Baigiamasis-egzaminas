@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom"; 
 
 function Skelbimai() {
@@ -19,22 +19,46 @@ function Skelbimai() {
   const navigate = useNavigate();
 
   // Fetch cars from backend
-  useEffect(() => {
-    const fetchCars = async () => {
+  
+    const fetchCars = useCallback (async () => {
       try {
         const res = await fetch("http://localhost:4000/api/Autonamai/automobiliai");
         const data = await res.json();
+        console.log("Fetched cars:", data);
+        data.forEach(c=>console.log(c._id, 'parduotas=', c.parduotas, 'rezervuotas=', c.rezervuotas, 'uzsakymoStatusas=', c.uzsakymoStatusas))
         setCars(data);
         setFilteredCars(data);
+        
 
         const prices = data.map(car => car.price);
         if(prices.length) setPriceRange([0, Math.max(...prices)]);
       } catch (err) {
         console.error("Error fetching cars:", err);
       }
-    };
+    }, []);
+  useEffect(() => {
     fetchCars();
-  }, []);
+  }, [fetchCars]);
+
+    // auto-refresh when tab becomes visible (useful after redirects) and on custom event
+  useEffect(() => {
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") fetchCars();
+    };
+    const onCarsUpdated = () => fetchCars();
+
+    document.addEventListener("visibilitychange", onVisibility);
+    window.addEventListener("carsUpdated", onCarsUpdated);
+
+    // expose for manual testing in console
+    window.refreshCars = fetchCars;
+
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("carsUpdated", onCarsUpdated);
+      delete window.refreshCars;
+    };
+  }, [fetchCars]);
 
   const uniqueModels = [...new Set(cars.map(car => car.model))];
   const uniqueColors = [...new Set(cars.map(car => car.color))];
@@ -240,16 +264,50 @@ function Skelbimai() {
           {currentCars.map((car) => (
             <div
               key={car._id}
-              className="car-card"
+              className={`car-card ${car.parduotas ? "parduotas" : car.rezervuotas ? "rezervuotas" : ""}`}
               onClick={() => navigate(`/automobiliai/${car._id}`)}
+              style={{position: "relative", opacity: car.parduotas ? 0.6 : car.rezervuotas ? 0.8 : 1, cursor: "pointer"}}
             >
               {car.photo ? (
                 <img src={car.photo} alt={car.model} className="car-image" />
               ) : (
                 <p className="no-photo">No photo</p>
               )}
+
+              {(() => {
+  // normalize status (backend may send boolean or string)
+  const isSold = car.parduotas === true || car.parduotas === "true" || car.uzsakymoStatusas === "patvirtintas";
+  const isReserved = !isSold && (car.rezervuotas === true || car.rezervuotas === "true" || car.uzsakymoStatusas === "rezervuotas");
+  const show = isSold || isReserved;
+  const bg = isSold ? "red" : "orange";
+  const label = isSold ? "PARDUOTA" : "REZERVUOTA";
+  return show ? (
+    <div
+      className="status-badge"
+      style={{
+        position: "absolute",
+        top: "8px",
+        left: "8px",
+        backgroundColor: bg,
+        color: "white",
+        padding: "4px 8px",
+        borderRadius: "8px",
+        fontWeight: "bold",
+        fontSize: "0.9rem",
+        zIndex: 9999
+      }}
+    >
+      {label}
+    </div>
+  ) : null;
+})()}
+
               <h3 className="car-model">{car.model}</h3>
-              <p className="car-price">Kaina: €{car.price}</p>
+              <p className="car-year">Metai: {car.year}</p>
+              <p className="car-fuel">Kuro tipas: {car.fuelType}</p>
+              <p className="car-power">Galia: {car.power} kW</p>
+              <p className="car-gearbox">Pavarų dėžė: {car.gearBox}</p>
+              <p className="car-price"><strong>Kaina: €{car.price} </strong></p>
             </div>
           ))}
         </div>

@@ -110,7 +110,14 @@
 .car-card p {
   color: #555;
   margin-top: 5px;
-  font-size: 0.95rem;
+  font-size: 0.8rem;
+  
+}
+.car-card .car-price{
+  font-size: 1rem;
+  
+  color: #6b0000;
+  margin-top: 10px;
 }
 
 /* MYGTUKAS */

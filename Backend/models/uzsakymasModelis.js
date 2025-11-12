@@ -23,6 +23,11 @@ const uzsakymasSchema = new mongoose.Schema ({
         type: Number,
         required: true
     },
+    automobilis: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Automobilis',
+        required: false
+    },
     email: {
         type: String,
         required: true

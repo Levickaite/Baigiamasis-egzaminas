@@ -96,6 +96,31 @@ function Uzsakymai() {
       // normalize the updated status coming from backend
       const updatedNormalized = { ...updated, status: normalizeStatus(updated.status) };
 
+      let carUpdate= {}
+
+      if (newStatus === "Įvykdyta") {
+      carUpdate = { parduotas: true, rezervuotas: false };
+    } else if (newStatus === "Patvirtinta" || newStatus === "Laukiama") {
+      carUpdate = { rezervuotas: true, parduotas: false };
+    } else {
+      carUpdate = { rezervuotas: false, parduotas: false };
+    }
+
+    // Užsakymo objekte turėtų būti nuoroda į automobilį (pvz. car.automobilis)
+    if (updatedNormalized.automobilis?._id) {
+      await fetch(
+        `http://localhost:4000/api/Autonamai/automobiliai/${updatedNormalized.automobilis._id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token ? `Bearer ${token}` : undefined,
+          },
+          body: JSON.stringify(carUpdate),
+        }
+      );
+    }
+
       // update cars and filteredCars arrays
       setCars((prev) => prev.map((car) => (car._id === updatedNormalized._id ? updatedNormalized : car)));
       setFilteredCars((prev) => prev.map((car) => (car._id === updatedNormalized._id ? updatedNormalized : car)));

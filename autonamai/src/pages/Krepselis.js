@@ -13,6 +13,7 @@ const Krepselis = () => {
     const fetchCart = async () => {
         if (!user) {
             setError("Turite būti prisijungęs, kad peržiūrėtumėte krepšelį.");
+            setCart({ prekes: [], visoMoketi: 0 });
             setLoading(false);
             return;
         }
@@ -26,10 +27,16 @@ const Krepselis = () => {
                 throw new Error("Nepavyko gauti krepšelio duomenų");
             }
             const data = await res.json();
-            setCart(data);
+            const normalized={
+              ...data,
+              prekes: Array.isArray(data.prekes) ? data.prekes : [],
+              visoMoketi: data.visoMoketi || 0
+            }
+            setCart(normalized);
             setLoading(false);
         } catch (err) {
             setError(err.message);
+            setCart({ prekes: [], visoMoketi: 0 });
             setLoading(false);
         }
     }
@@ -79,16 +86,18 @@ const handlePay = async () => {
      
 
       const newOrder = {
-        prekes: cart.prekes.map((item) => ({
-          photo: item.automobilis.photo,
-          model: item.automobilis.model,
-          price: item.automobilis.price,
-          color: item.automobilis.color,
-          year: item.automobilis.year,
-          kiekis: item.kiekis,
-        })),
-        email: user.email,
-        status: "Nepatvirtinta",
+        prekes: cart.prekes
+    .filter(item => item.automobilis) // <-- saugiklis
+    .map(item => ({
+      photo: item.automobilis.photo,
+      model: item.automobilis.model,
+      price: item.automobilis.price,
+      color: item.automobilis.color,
+      year: item.automobilis.year,
+      kiekis: item.kiekis,
+    })),
+  email: user.email,
+        status: 'Nepatvirtinta'
      };
 
     const res = await fetch("http://localhost:4000/api/Autonamai/uzsakymas/create", {
@@ -108,9 +117,26 @@ const handlePay = async () => {
       data = { message: text };
     }
 
-    if (res.ok) {
+        if (res.ok) {
+      // optionally: ensure each car is marked as reserved (backend should do this,
+      // but if it doesn't, call PATCH here)
+      await Promise.all(
+        cart.prekes.map(item =>
+          fetch(`http://localhost:4000/api/Autonamai/automobiliai/${item.automobilis._id}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${user.token}`
+            },
+            body: JSON.stringify({ uzsakymoStatusas: 'rezervuotas' })
+          })
+        )
+      );
+
+      // notify other pages to refresh listings
+      window.dispatchEvent(new Event('carsUpdated'));
       alert("✅ Užsakymas sėkmingai sukurtas!");
-      fetchCart();
+      await fetchCart();
     } else {
       console.error('❌ Order creation failed:', res.status, data);
       alert("Klaida kuriant užsakymą: " + (data.error || data.message || res.statusText));
@@ -132,13 +158,15 @@ const handlePay = async () => {
                 <>
                 <div className="krepselis-items">
                     {cart.prekes.map((item) => (
+                      item.automobilis ? (
                         <div key={item.automobilis._id}>
-                            <img src={item.automobilis.photo} alt={item.automobilis.model}  />
-                            <h2>{item.automobilis.model}</h2>
-                            <p>Kaina: {item.automobilis.price} EUR</p>
-                            <p>Kiekis: {item.kiekis}</p>
-                            <button onClick={() => removeItem(item.automobilis._id)}>Pašalinti</button>
+                          <img src={item.automobilis.photo} alt={item.automobilis.model} />
+                          <h2>{item.automobilis.model}</h2>
+                          <p>Kaina: {item.automobilis.price} EUR</p>
+                          <p>Kiekis: {item.kiekis}</p>
+                          <button onClick={() => removeItem(item.automobilis._id)}>Pašalinti</button>
                         </div>
+                      ) : null
                     ))}
                 </div>
                 <div className="total-section">

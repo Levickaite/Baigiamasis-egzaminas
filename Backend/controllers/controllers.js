@@ -46,11 +46,31 @@ const {id} = req.params
 if(!mongoose.Types.ObjectId.isValid(id)){
 return res.status(404).json({error: 'Tokio automobilio nėra.'})
 }
+try{
+  const updateData = { ...req.body };
+
+if (req.body.uzsakymoStatusas) {
+      if (req.body.uzsakymoStatusas === 'patvirtintas') {
+        updateData.rezervuotas = false;
+        updateData.parduotas = true;
+      } else if (req.body.uzsakymoStatusas === 'rezervuotas') {
+        updateData.rezervuotas = true;
+        updateData.parduotas = false;
+      } else if (req.body.uzsakymoStatusas === 'atšauktas') {
+        updateData.rezervuotas = false;
+        updateData.parduotas = false;
+      }
+    }
+
 const masina = await Automobilis.findOneAndUpdate({_id: id}, {...req.body}, {new: true})
 if(!masina){
 return res.status(404).json({error: 'Tokio automobilio nėra.'})
 }
 res.status(200).json(masina)
+}
+catch(error){
+res.status(400).json({error: error.message})
+}
 }
 
 //DELETE - ištrinti vieną automobilį
