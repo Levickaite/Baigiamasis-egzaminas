@@ -686,7 +686,7 @@ html, body {
 h2 + .skelbimas-form{ margin-top: 12px; }
 
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
 
 	/* .automobilis-page{
 		width: 100% !important;
