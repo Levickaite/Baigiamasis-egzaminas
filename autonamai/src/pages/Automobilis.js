@@ -264,7 +264,7 @@ export default function Automobilis() {
               {isAdmin && (
                 <>
                   <button onClick={() => setEditMode(true)} className="btn-secondary">Redaguoti</button>
-                  <button onClick={handleDelete} className="btn-secondary" style={{marginLeft: '1rem'}}>Ištrinti</button>
+                  <button onClick={handleDelete} className="btn-secondary" >Ištrinti</button>
                 </>
               )}
             </div>
