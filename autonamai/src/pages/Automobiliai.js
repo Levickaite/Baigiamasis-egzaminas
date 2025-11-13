@@ -79,7 +79,7 @@ function Skelbimai() {
     // Search by model
     if (search.trim()) {
       result = result.filter((car) =>
-        car.model.toLowerCase().includes(search.toLowerCase())
+        car.model && car.model.toLowerCase().includes(search.toLowerCase())
       );
     }
 
@@ -93,7 +93,7 @@ function Skelbimai() {
     }
     // Filter by engine
     if (engine) {
-      result = result.filter((car) => car.engine === engine);
+      result = result.filter((car) => String(car.engine) === String(engine));
     }
     // Filter by gearBox
     if (gearBox) {
@@ -105,7 +105,7 @@ function Skelbimai() {
     }
     // Filter by power
     if (power) {
-      result = result.filter((car) => car.power === power);
+      result = result.filter((car) => String(car.power) === String(power));
     }
 
     // Sorting
