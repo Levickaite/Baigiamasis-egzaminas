@@ -39,7 +39,13 @@ export default function Automobilis() {
         setEditedCar(response.data);
         console.log("Car data:", response?.data);
         console.log(car);
-        
+        // increment traffic counter (best-effort, ignore errors)
+        try {
+          await fetch(`http://localhost:4000/api/Autonamai/automobiliai/${id}/visit`, { method: 'PATCH' });
+          window.dispatchEvent(new Event('carsUpdated'));
+        } catch (e) {
+          console.warn('Failed to increment traffic', e);
+        }
       } catch (error) {
         console.error("Klaida gaunant duomenis:", error);
       } finally {
@@ -75,6 +81,15 @@ export default function Automobilis() {
   const addToCart = async (automobilisId) => {
     if (!user) {
       alert("Turite būti prisijungęs, kad pridėtumėte į krepšelį.");
+      return;
+    }
+    // prevent adding reserved or sold cars
+    if (car?.rezervuotas) {
+      alert('Atsiprašome, automobilis šiuo metu rezervuotas.');
+      return;
+    }
+    if (car?.parduotas) {
+      alert('Atsiprašome, automobilis jau parduotas.');
       return;
     }
     try {
@@ -115,6 +130,11 @@ export default function Automobilis() {
 
   if (loading) return <p>Kraunama...</p>;
   if (!car || !car.model) return <p>Automobilis nerastas.</p>;
+
+  // compute badge state (map uzsakymoStatusas too)
+  const statusStr = (car.uzsakymoStatusas || '').toString().toLowerCase();
+  const isSold = car.parduotas === true || statusStr.includes('įvykd');
+  const isReserved = !isSold && (car.rezervuotas === true || statusStr.includes('patvirt'));
 
   return (
     <div className="automobilis-page">
@@ -176,7 +196,7 @@ export default function Automobilis() {
           <button className="btn-secondary" onClick={() => setEditMode(false)}>Atšaukti</button>
         </div>
       ) : (
-        <div className="car-card">
+        <div className="car-card" style={{ position: 'relative' }}>
           <div className="car-detail">
             <div className="car-left">
               <img
@@ -232,12 +252,19 @@ export default function Automobilis() {
             </div>
             <div className="car-actions">
               {user && (
-                <button onClick={() => addToCart(id)} className="btn-primary">Įdėti į krepšelį</button>
+                <button
+                  onClick={() => addToCart(id)}
+                  className="btn-primary"
+                  disabled={isSold || isReserved}
+                  style={isSold || isReserved ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
+                >
+                  {isSold ? 'PARDUOTA' : isReserved ? 'REZERVUOTA' : 'Įdėti į krepšelį'}
+                </button>
               )}
               {isAdmin && (
                 <>
                   <button onClick={() => setEditMode(true)} className="btn-secondary">Redaguoti</button>
-                  <button onClick={handleDelete} className="btn-secondary" style={{marginLeft: '1rem'}}>Ištrinti</button>
+                  <button onClick={handleDelete} className="btn-secondary" >Ištrinti</button>
                 </>
               )}
             </div>

@@ -50,6 +50,8 @@ router.post('/', requireAuth,
 }, controller.createAutomobilis);
 //PATCH - redaguoti vieną automobilį
 router.patch('/:id', controller.updateAutomobilis)
+// increment visit/traffic counter
+router.patch('/:id/visit', controller.incrementTraffic)
 //DELETE - ištrinti vieną automobilį
 router.delete('/:id', controller.deleteAutomobilis)
 

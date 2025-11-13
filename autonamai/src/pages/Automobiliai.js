@@ -261,55 +261,56 @@ function Skelbimai() {
 
         {/* Cars list */}
         <div className="cars-grid">
-          {currentCars.map((car) => (
-            <div
-              key={car._id}
-              className={`car-card ${car.parduotas ? "parduotas" : car.rezervuotas ? "rezervuotas" : ""}`}
-              onClick={() => navigate(`/automobiliai/${car._id}`)}
-              style={{position: "relative", opacity: car.parduotas ? 0.6 : car.rezervuotas ? 0.8 : 1, cursor: "pointer"}}
-            >
-              {car.photo ? (
-                <img src={car.photo} alt={car.model} className="car-image" />
-              ) : (
-                <p className="no-photo">No photo</p>
-              )}
+          {currentCars.map((car) => {
+            // normalize status (backend may send boolean or string)
+            // map order-related field to badge: 'įvykdyta' -> sold, 'patvirtinta' -> reserved
+            const s = (car.uzsakymoStatusas || "").toString().toLowerCase();
+            const isSold = car.parduotas === true || car.parduotas === "true" || s.includes("įvykd");
+            const isReserved = !isSold && (car.rezervuotas === true || car.rezervuotas === "true" || s.includes("patvirt"));
 
-              {(() => {
-  // normalize status (backend may send boolean or string)
-  const isSold = car.parduotas === true || car.parduotas === "true" || car.uzsakymoStatusas === "patvirtintas";
-  const isReserved = !isSold && (car.rezervuotas === true || car.rezervuotas === "true" || car.uzsakymoStatusas === "rezervuotas");
-  const show = isSold || isReserved;
-  const bg = isSold ? "red" : "orange";
-  const label = isSold ? "PARDUOTA" : "REZERVUOTA";
-  return show ? (
-    <div
-      className="status-badge"
-      style={{
-        position: "absolute",
-        top: "8px",
-        left: "8px",
-        backgroundColor: bg,
-        color: "white",
-        padding: "4px 8px",
-        borderRadius: "8px",
-        fontWeight: "bold",
-        fontSize: "0.9rem",
-        zIndex: 9999
-      }}
-    >
-      {label}
-    </div>
-  ) : null;
-})()}
+            return (
+              <div
+                key={car._id}
+                className={`car-card ${car.parduotas ? "parduotas" : car.rezervuotas ? "rezervuotas" : ""}`}
+                onClick={() => navigate(`/automobiliai/${car._id}`)}
+                style={{ position: "relative", opacity: car.parduotas ? 0.6 : car.rezervuotas ? 0.85 : 1, cursor: "pointer" }}
+              >
+                {car.photo ? (
+                  <img src={car.photo} alt={car.model} className="car-image" />
+                ) : (
+                  <p className="no-photo">No photo</p>
+                )}
 
-              <h3 className="car-model">{car.model}</h3>
-              <p className="car-year">Metai: {car.year}</p>
-              <p className="car-fuel">Kuro tipas: {car.fuelType}</p>
-              <p className="car-power">Galia: {car.power} kW</p>
-              <p className="car-gearbox">Pavarų dėžė: {car.gearBox}</p>
-              <p className="car-price"><strong>Kaina: €{car.price} </strong></p>
-            </div>
-          ))}
+                {(isSold || isReserved) ? (
+                  <div
+                    className="status-badge"
+                    style={{
+                      position: "absolute",
+                      top: "8px",
+                      left: "8px",
+                      backgroundColor: isSold ? "red" : "orange",
+                      color: "white",
+                      padding: "4px 8px",
+                      borderRadius: "8px",
+                      fontWeight: "bold",
+                      fontSize: "0.9rem",
+                      zIndex: 9999,
+                    }}
+                  >
+                    {isSold ? "PARDUOTA" : "REZERVUOTA"}
+                  </div>
+                ) : null}
+
+                <h3 className="car-model">{car.model}</h3>
+                <p className="car-year">Metai: {car.year}</p>
+                <p className="car-fuel">Kuro tipas: {car.fuelType}</p>
+                <p className="car-power">Galia: {car.power} kW</p>
+                <p className="car-gearbox">Pavarų dėžė: {car.gearBox}</p>
+                <p className="car-price"><strong>Kaina: €{car.price} </strong></p>
+                
+              </div>
+            );
+          })}
         </div>
       </div>
       <div className="pagination-container">
