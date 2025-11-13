@@ -10,11 +10,25 @@
 	--max-width: 1100px;
 }
 
+
+/* Reset & box-sizing to avoid horizontal overflow when combining max-width and padding */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+
+
+
 /* Styles for the new listing form (Skelbimas.js) */
 .skelbimas-page {
     background: var(--bg);
     color: #111827;
-    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, 'Helvetica Neue', Arial;
+    font-family: "Poppins", sans-serif;
     padding: 24px 0;
     min-height: calc(100vh - 200px);
 }
@@ -115,7 +129,7 @@
 .automobilis-page {
 	background: var(--bg);
 	color: #111827;
-	font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, 'Helvetica Neue', Arial;
+	font-family: "Poppins", sans-serif;
 	padding: 12px 0; /* small vertical padding so the page content breathes */
 }
 
@@ -575,16 +589,6 @@
 	gap: 12px;
 	grid-column: 1 / -1;
 }
-/* .skelbimas-form .file-input input[type="file"]{
-	hide native input but keep it accessible
-	position: absolute;
-	opacity: 0;
-	width: 0;
-	height: 0;
-} */
-
-
-
 
 .skelbimas-form .file-input {
 	position: relative;
@@ -628,26 +632,6 @@
 	background: #4b5563; /* šviesesnis atspalvis */
 	transform: translateY(-1px);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .skelbimas-form .file-btn{
 	display: inline-flex;
 	align-items: center;
@@ -668,12 +652,6 @@
 	background: #7f0000;
 	transform: translateY(-1px);
 }
-
-
-
-
-
-
 .skelbimas-form .file-name{
 	color: #374151;
 	font-size: 0.95rem;
@@ -707,3 +685,151 @@
 /* small visual tweak: spacing under the heading when this form is used in same page */
 h2 + .skelbimas-form{ margin-top: 12px; }
 
+
+@media (max-width: 480px) {
+
+	/* .automobilis-page{
+		width: 100% !important;
+	} */
+  .car-detail {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start;
+  }
+
+  .car-left,
+  .car-center,
+  .car-right {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+  }
+
+  .car-left {
+    order: 1;
+  }
+
+  .car-center {
+    order: 2;
+    margin-top: 12px;
+  }
+
+  .car-right,
+  .car-actions {
+    order: 3;
+    margin-top: 12px;
+  }
+
+  .car-photo {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 260px !important;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+
+  .car-title {
+    text-align: center;
+    margin-top: 12px;
+    font-size: 1.2rem;
+  }
+
+  /* ✅ tvarkingi tarpai specifikacijoje */
+  .car-specs {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 4px;
+    column-gap: 12px;
+    width: 100%;
+    text-align: left;
+    margin-top: 10px;
+  }
+
+  .car-specs > div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.2;
+  }
+
+  .car-specs strong {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #444;
+    margin-bottom: 2px;
+  }
+
+  .car-specs span {
+    font-size: 0.9rem;
+    color: #333;
+  }
+
+  .car-actions {
+    margin-top: 20px;
+    width: 100%;
+  }
+
+  .car-actions button {
+    width: 55%;
+    font-size: 1rem;
+  }
+
+  /* ✅ Skelbimas.js forma - visi laukeliai vienas po kito */
+  .skelbimas-form {
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-columns: none !important;
+    padding: 16px !important;
+    gap: 16px !important;
+  }
+
+  .skelbimas-form .model-field,
+  .skelbimas-form .price-field,
+  .skelbimas-form .color-field,
+  .skelbimas-form .engine-field,
+  .skelbimas-form .year-field,
+  .skelbimas-form .gearbox-field,
+  .skelbimas-form .fuel-field,
+  .skelbimas-form .power-field,
+  .skelbimas-form .file-input {
+    grid-column: 1 / -1 !important;
+    grid-row: auto !important;
+    width: 100% !important;
+  }
+
+  .skelbimas-form input,
+  .skelbimas-form select {
+    width: 100% !important;
+    font-size: 1rem !important;
+  }
+
+  .skelbimas-form button[type="submit"] {
+    width: 100% !important;
+    margin-top: 8px !important;
+  }
+
+  .skelbimas-title {
+    font-size: 1.5rem !important;
+    padding: 0 16px !important;
+  }
+
+  .skelbimas-container {
+    padding: 16px !important;
+    margin: 0 8px !important;
+  }
+  .skelbimas-form .file-btn {
+  height: 40px !important;
+}
+
+/* ✅ Redagavimo formos mygtukai*/
+div:has(> button + button) {
+  display: flex !important;
+}
+
+div:has(> button + button) button {
+  width: 55% !important;
+  min-height: 40px !important;
+  align-self: center !important;
+}
+
+}
