@@ -23,6 +23,13 @@ export const addToCart = async (req, res) => {
         if (!automobilis) {
             return res.status(404).json({ error: 'Automobilis nerastas' });
         }
+        // prevent adding if car is reserved or sold
+        if (automobilis.rezervuotas) {
+            return res.status(400).json({ error: 'Automobilis jau rezervuotas' });
+        }
+        if (automobilis.parduotas) {
+            return res.status(400).json({ error: 'Automobilis jau parduotas' });
+        }
         let cart = await Krepselis.findOne({ user: userId });
         if (!cart) {
             cart = new Krepselis({ user: userId, prekes: [], visoMoketi: 0 });

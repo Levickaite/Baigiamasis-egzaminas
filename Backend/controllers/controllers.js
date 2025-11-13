@@ -95,4 +95,15 @@ export const getTopAutomobiliai = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 }
+// increment traffic counter for a car
+export const incrementTraffic = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const masina = await Automobilis.findByIdAndUpdate(id, { $inc: { traffic: 1 } }, { new: true });
+    if (!masina) return res.status(404).json({ error: 'Automobilis nerastas' });
+    res.status(200).json(masina);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+}
 //top auto filtravimas pagal traffica

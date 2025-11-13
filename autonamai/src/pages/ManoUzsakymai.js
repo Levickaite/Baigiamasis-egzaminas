@@ -95,9 +95,11 @@ function Uzsakymai() {
       // normalize the updated status coming from backend
       const updatedNormalized = { ...updated, status: normalizeStatus(updated.status) };
 
-      // update cars and filteredCars arrays
+  // update cars and filteredCars arrays
       setCars((prev) => prev.map((car) => (car._id === updatedNormalized._id ? updatedNormalized : car)));
       setFilteredCars((prev) => prev.map((car) => (car._id === updatedNormalized._id ? updatedNormalized : car)));
+  // inform other pages (listings) to refresh their data
+  window.dispatchEvent(new Event('carsUpdated'));
     } catch (err) {
       console.error("Error updating status:", err);
       alert("Nepavyko pakeisti statuso");
