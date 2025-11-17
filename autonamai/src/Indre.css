@@ -106,7 +106,7 @@ html, body {
 }
 
 .car-card img {
-  width: 150px;
+  /* width: 150px; */
   height: 150px;
   object-fit: contain;
   border-radius: 8px;
