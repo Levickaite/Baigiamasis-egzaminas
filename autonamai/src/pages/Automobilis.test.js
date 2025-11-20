@@ -158,15 +158,24 @@ describe("Automobilis page tests", () => {
   });
 
   test("opens lightbox when image clicked", async () => {
-    renderWithAuth(<Automobilis />);
+  renderWithAuth(<Automobilis />);
 
-    await screen.findByText("Automobilio informacija");
+  await screen.findByText("Automobilio informacija");
 
-    fireEvent.click(screen.getByAltText("Audi"));
+  // click the small image
+  fireEvent.click(screen.getByAltText("Audi"));
 
-    expect(screen.getByRole("button", { name: "×" })).toBeInTheDocument();
-    expect(screen.getByRole("img")).toBeInTheDocument();
-  });
+  // close button appears → lightbox is open
+  expect(screen.getByRole("button", { name: "×" })).toBeInTheDocument();
+
+  // find the lightbox image specifically: it appears AFTER the small image
+  const images = screen.getAllByRole("img");
+
+  // the LAST image is the lightbox image
+  const lightboxImage = images[images.length - 1];
+
+  expect(lightboxImage).toBeInTheDocument();
+});
 
   test("closes lightbox when X clicked", async () => {
     renderWithAuth(<Automobilis />);
