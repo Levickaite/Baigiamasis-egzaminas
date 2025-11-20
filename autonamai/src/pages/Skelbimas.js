@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 
 export default function Skelbimas() {
   const { user } = useContext(AuthContext);
+
   const [newCar, setNewCar] = useState({
     model: "",
     price: "",
@@ -14,41 +15,37 @@ export default function Skelbimas() {
     fuelType: "",
     power: "",
   });
+
   const [images, setImages] = useState([]);
   const [fileLabel, setFileLabel] = useState("Nepasirinktas joks failas");
   const [loading, setLoading] = useState(false);
 
-  // Duomenų įvedimo valdymas
+  // Inputų valdymas
   const handleChange = (e) => {
     const { name, value } = e.target;
     setNewCar((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Nuotraukų įkėlimas (kelios nuotraukos)
+  // Failų įkėlimas
   const handleFileChange = (e) => {
     const files = e.target.files;
     setImages(files);
+
     if (!files || files.length === 0) {
       setFileLabel("Nepasirinktas joks failas");
       return;
     }
-    if (files.length === 1) {
-      setFileLabel(files[0].name);
-    } else {
-      setFileLabel(`${files.length} failai pasirinkti`);
-    }
+    setFileLabel(files.length === 1 ? files[0].name : `${files.length} failai pasirinkti`);
   };
 
-  // Skelbimo išsaugojimas
+  // Submit funkcija
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
       const formData = new FormData();
-      Object.entries(newCar).forEach(([key, value]) => {
-        formData.append(key, value);
-      });
+      Object.entries(newCar).forEach(([key, value]) => formData.append(key, value));
 
       for (let i = 0; i < images.length; i++) {
         formData.append("images", images[i]);
@@ -68,6 +65,8 @@ export default function Skelbimas() {
       );
 
       alert("Naujas skelbimas sėkmingai sukurtas!");
+      
+      // Išvalome formą
       setNewCar({
         model: "",
         price: "",
@@ -79,6 +78,8 @@ export default function Skelbimas() {
         power: "",
       });
       setImages([]);
+      setFileLabel("Nepasirinktas joks failas");
+
       console.log("Sukurta:", res.data);
     } catch (error) {
       console.error("Klaida kuriant skelbimą:", error);
@@ -88,17 +89,19 @@ export default function Skelbimas() {
     }
   };
 
-  if (!user || user.role === 'user') {
+  // Jei user nėra adminas, nerodome formos
+  if (!user || user.role === "user") {
     return (
       <div style={{ padding: "40px", textAlign: "center" }}>
+        <p>Neturite teisės kurti skelbimo.</p>
       </div>
     );
   }
 
   return (
     <div style={{ padding: "20px" }}>
-  <h2 className="skelbimas-title">Sukurti naują skelbimą</h2>
-  <form className="skelbimas-form" onSubmit={handleSubmit}>
+      <h2 className="skelbimas-title">Sukurti naują skelbimą</h2>
+      <form className="skelbimas-form" onSubmit={handleSubmit}>
         {/* Modelis */}
         <input
           className="model-field"
@@ -122,7 +125,13 @@ export default function Skelbimas() {
         />
 
         {/* Spalva */}
-        <select className="color-field" name="color" value={newCar.color} onChange={handleChange} required>
+        <select
+          className="color-field"
+          name="color"
+          value={newCar.color}
+          onChange={handleChange}
+          required
+        >
           <option value="">Pasirinkite spalvą</option>
           <option value="Raudona">Raudona</option>
           <option value="Mėlyna">Mėlyna</option>
@@ -143,7 +152,13 @@ export default function Skelbimas() {
         />
 
         {/* Metai */}
-        <select className="year-field" name="year" value={newCar.year} onChange={handleChange} required>
+        <select
+          className="year-field"
+          name="year"
+          value={newCar.year}
+          onChange={handleChange}
+          required
+        >
           <option value="">Pasirinkite metus</option>
           {Array.from({ length: 30 }, (_, i) => {
             const year = 2025 - i;
@@ -156,14 +171,26 @@ export default function Skelbimas() {
         </select>
 
         {/* Pavarų dėžė */}
-        <select className="gearbox-field" name="gearBox" value={newCar.gearBox} onChange={handleChange} required>
+        <select
+          className="gearbox-field"
+          name="gearBox"
+          value={newCar.gearBox}
+          onChange={handleChange}
+          required
+        >
           <option value="">Pasirinkite pavarų dėžę</option>
           <option value="Automatinė">Automatinė</option>
           <option value="Mechaninė">Mechaninė</option>
         </select>
 
         {/* Kuro tipas */}
-        <select className="fuel-field" name="fuelType" value={newCar.fuelType} onChange={handleChange} required>
+        <select
+          className="fuel-field"
+          name="fuelType"
+          value={newCar.fuelType}
+          onChange={handleChange}
+          required
+        >
           <option value="">Pasirinkite kuro tipą</option>
           <option value="Benzinas">Benzinas</option>
           <option value="Dyzelinas">Dyzelinas</option>
@@ -185,11 +212,17 @@ export default function Skelbimas() {
         {/* Nuotraukos */}
         <label className="file-input">
           <span className="file-btn">Įkelti nuotrauką</span>
-          <input type="file" multiple onChange={handleFileChange} />
+          <input
+            type="file"
+            multiple
+            onChange={handleFileChange}
+            data-testid="file-input"
+          />
           <span className="file-name">{fileLabel}</span>
         </label>
 
-        <button type="submit" className="btn-primary" disabled={loading}>
+        {/* Submit mygtukas */}
+        <button className="btn-primary" type="submit">
           {loading ? "Kuriama..." : "Sukurti skelbimą"}
         </button>
       </form>
