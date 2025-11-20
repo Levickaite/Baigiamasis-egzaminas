@@ -3,15 +3,19 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 
-// Mock useLogin hook before requiring the component
+// Helper funkcija: suranda įvesties lauką po label
+function getInputAfterLabel(text) {
+  const label = screen.getByText(new RegExp(text, 'i'));
+  return label ? label.nextElementSibling : null;
+}
+
+// Mock useLogin hook prieš importuojant komponentą
 const mockLogin = jest.fn();
 jest.mock('../hooks/useLogin', () => ({
   useLogin: () => ({ login: mockLogin, isLoading: false, error: null }),
 }));
 
 const Login = require('./Login').default;
-
-
 
 describe('Login page', () => {
   test('renders inputs and button', () => {
@@ -41,12 +45,13 @@ describe('Login page', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /Prisijungti/i }));
 
-    await waitFor(() => expect(mockLogin).toHaveBeenCalledWith('user@example.com', 'secret'));
+    await waitFor(() =>
+      expect(mockLogin).toHaveBeenCalledWith('user@example.com', 'secret')
+    );
   });
 
-
-
   test('disables button while loading', () => {
+    // Mock hook su isLoading: true
     jest.doMock('../hooks/useLogin', () => ({
       useLogin: () => ({ login: jest.fn(), isLoading: true, error: null }),
     }));
