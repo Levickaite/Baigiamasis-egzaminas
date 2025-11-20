@@ -3,7 +3,7 @@
   "name": "autonamai",
   "jest": {
     "transformIgnorePatterns": [
-      "node_modules/(?!axios)/"
+      "node_modules/(?!(axios|react-router-dom)/)"
     ]
   },
   "version": "0.1.0",
