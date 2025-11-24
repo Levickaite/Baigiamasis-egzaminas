@@ -12,7 +12,7 @@ dotenv.config({ path: './.env' });
 
 //express app
 const app =express()
-app.use(cors({ origin: 'http://localhost:3000' }))
+app.use(cors({ origin: ["https://autonamai-ashy.vercel.app/"] }))
 //middleware
 app.use(express.json())
 app.use((req, res, next)=> {
