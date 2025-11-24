@@ -3,28 +3,33 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 
-// Helper funkcija: suranda įvesties lauką po label
+// Bendras mock-as, kuris bus perrašomas testuose
+let mockReturn = { login: jest.fn(), isLoading: false, error: null };
+
+// Hooko mockas
+jest.mock('../hooks/useLogin', () => ({
+  useLogin: () => mockReturn,
+}));
+
+// Helper funkcija
 function getInputAfterLabel(text) {
   const label = screen.getByText(new RegExp(text, 'i'));
   return label ? label.nextElementSibling : null;
 }
 
-// Mock useLogin hook prieš importuojant komponentą
-const mockLogin = jest.fn();
-jest.mock('../hooks/useLogin', () => ({
-  useLogin: () => ({ login: mockLogin, isLoading: false, error: null }),
-}));
-
 const Login = require('./Login').default;
 
 describe('Login page', () => {
+  beforeEach(() => {
+    mockReturn = { login: jest.fn(), isLoading: false, error: null }; // reset
+  });
+
   test('renders inputs and button', () => {
     render(
       <MemoryRouter>
         <Login />
       </MemoryRouter>
     );
-
     expect(screen.getByText(/Prisijungimas/i)).toBeInTheDocument();
     expect(getInputAfterLabel('El. paštas')).toBeInTheDocument();
     expect(getInputAfterLabel('Slaptažodis')).toBeInTheDocument();
@@ -32,7 +37,7 @@ describe('Login page', () => {
   });
 
   test('calls login with correct data', async () => {
-    mockLogin.mockResolvedValue(true);
+    mockReturn.login.mockResolvedValue(true);
 
     render(
       <MemoryRouter>
@@ -46,21 +51,17 @@ describe('Login page', () => {
     fireEvent.click(screen.getByRole('button', { name: /Prisijungti/i }));
 
     await waitFor(() =>
-      expect(mockLogin).toHaveBeenCalledWith('user@example.com', 'secret')
+      expect(mockReturn.login).toHaveBeenCalledWith('user@example.com', 'secret')
     );
   });
 
   test('disables button while loading', () => {
-    // Mock hook su isLoading: true
-    jest.doMock('../hooks/useLogin', () => ({
-      useLogin: () => ({ login: jest.fn(), isLoading: true, error: null }),
-    }));
-
-    const LoginLoading = require('./Login').default;
+    // Perrašome tik tai, ką grąžina hook'as
+    mockReturn = { login: jest.fn(), isLoading: true, error: null };
 
     render(
       <MemoryRouter>
-        <LoginLoading />
+        <Login />
       </MemoryRouter>
     );
 

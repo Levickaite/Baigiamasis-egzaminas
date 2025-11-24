@@ -18,13 +18,15 @@ const renderWithAuth = (user) => {
 };
 
 describe("Skelbimas komponentas", () => {
+  beforeAll(() => {
+    window.alert = jest.fn();
+  });
+
   beforeEach(() => {
     // Išvalome visus mock'us prieš kiekvieną testą
     jest.clearAllMocks();
     // Mock'iname localStorage
     Storage.prototype.getItem = jest.fn(() => "fake-token");
-    // Mock'iname alert
-    global.alert = jest.fn();
   });
 
   test("nerodo formos, jei user nėra adminas", () => {

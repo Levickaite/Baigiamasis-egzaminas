@@ -24,7 +24,7 @@ function Skelbimai() {
       try {
         const res = await fetch("http://localhost:4000/api/Autonamai/automobiliai");
         const data = await res.json();
-        console.log("Fetched cars:", data);
+        // Remove or comment out unnecessary console.log statements
         data.forEach(c=>console.log(c._id, 'parduotas=', c.parduotas, 'rezervuotas=', c.rezervuotas, 'uzsakymoStatusas=', c.uzsakymoStatusas))
         setCars(data);
         setFilteredCars(data);

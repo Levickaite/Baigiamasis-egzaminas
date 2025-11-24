@@ -42,6 +42,10 @@ const mockCar = {
   parduotas: false,
 };
 
+beforeAll(() => {
+  window.alert = jest.fn();
+});
+
 beforeEach(() => {
   axios.get.mockResolvedValue({ data: mockCar });
   global.fetch = jest.fn(() =>
