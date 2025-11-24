@@ -69,7 +69,7 @@ export default function Automobilis() {
         `http://localhost:4000/api/Autonamai/automobiliai/${id}`,
         editedCar
       );
-      setCar(response.data); // always use response.data
+      setCar(response.data); 
       setEditMode(false);
       alert("Automobilio duomenys atnaujinti sėkmingai.");
     } catch (error) {

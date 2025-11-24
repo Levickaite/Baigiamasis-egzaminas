@@ -31,15 +31,14 @@ router.get('/:id', async (req, res) => {
     
     if (!car) return res.status(404).json({ error: "Automobilis nerastas" });
 
-    res.json(car); // grąžina pilną objektą
+    res.json(car); 
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Serverio klaida" });
   }
 });
 // POST - sukurti naują automobilį
-// router.post('/', controller.createAutomobilis)
-// Accept multiple images uploaded from the client under field name "images"
+
 router.post('/', requireAuth, 
   upload.array('images', 6),
   (req, res, next) => {
@@ -55,7 +54,7 @@ router.patch('/:id/visit', controller.incrementTraffic)
 //DELETE - ištrinti vieną automobilį
 router.delete('/:id', controller.deleteAutomobilis)
 
-//top auto
+
 
 
 

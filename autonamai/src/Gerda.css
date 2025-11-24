@@ -95,7 +95,7 @@
   grid-template-rows: repeat(2, 1fr);  /* 2 rows */
   gap: 3rem;
 
-  margin-top: 0; /* optional: remove top margin since spacing handled by flex gap */
+  margin-top: 0; 
   justify-content: center;
   align-items: center;
   width: 100%;

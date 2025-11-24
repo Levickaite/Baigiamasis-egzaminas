@@ -7,7 +7,7 @@
   background-color: #fff;
 }
 
-/* Reset & box-sizing to avoid horizontal overflow when combining max-width and padding */
+
 html, body {
   margin: 0;
   padding: 0;
@@ -106,7 +106,7 @@ html, body {
 }
 
 .car-card img {
-  /* width: 150px; */
+  
   height: 150px;
   object-fit: contain;
   border-radius: 8px;
@@ -518,7 +518,7 @@ nav button:hover {
 @supports not (aspect-ratio: 16/9) {
   .map-container {
     height: 0;
-    padding-bottom: 56.25%; /* 16:9 */
+    padding-bottom: 56.25%; 
   }
   .map-container iframe {
     position: absolute;

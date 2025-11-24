@@ -52,7 +52,7 @@ export const createOrder = async (req, res) => {
 // Return orders. If requester is a regular user, return only their orders (by email).
 export const getUzsakymas = async (req, res)=>{
     try {
-        // requireAuth middleware attaches req.user with fields: _id, role, email
+        
         const requester = req.user;
         if (!requester) {
             return res.status(401).json({ error: 'Unauthorized' });
