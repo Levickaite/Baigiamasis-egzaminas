@@ -87,7 +87,7 @@ const handlePay = async () => {
 
       const newOrder = {
         prekes: cart.prekes
-    .filter(item => item.automobilis) // <-- saugiklis
+    .filter(item => item.automobilis) 
     .map(item => ({
       photo: item.automobilis.photo,
       model: item.automobilis.model,
@@ -118,8 +118,7 @@ const handlePay = async () => {
     }
 
         if (res.ok) {
-      // optionally: ensure each car is marked as reserved (backend should do this,
-      // but if it doesn't, call PATCH here)
+      // Update each car's status to 'rezervuotas'
       await Promise.all(
         cart.prekes.map(item =>
           fetch(`http://localhost:4000/api/Autonamai/automobiliai/${item.automobilis._id}`, {

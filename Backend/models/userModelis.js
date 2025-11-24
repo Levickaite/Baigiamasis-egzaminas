@@ -24,7 +24,7 @@ const userSchema = new Schema ({
     role: {
     type: String,
     // allowed roles
-    default: 'user'                    // default role when registering
+    default: 'user'                    
   }
 }, { timestamps: true });
 

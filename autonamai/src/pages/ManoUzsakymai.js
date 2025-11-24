@@ -72,7 +72,7 @@ function Uzsakymai() {
     fetchCars();
   }, []);
 
-  // 🟢 ADMIN: Change status + auto delete if Įvykdyta
+  //  ADMIN: Change status 
   const handleStatusChange = async (carId, newStatus) => {
     try {
       const token = localStorage.getItem("token");

@@ -14,8 +14,7 @@ try {
 //POST - sukurti naują automobilį
 export const createAutomobilis = async (req, res)=>{
 const { model, price, color, engine, year, gearBox, fuelType, power} = req.body
-// When using upload.array('images'), multer stores files in req.files (array).
-// Use the first uploaded image as the primary `photo` to match the model schema.
+
 const photo = (req.files && req.files.length) ? req.files[0].path : null;
 
 let emptyFields=[]
@@ -106,4 +105,3 @@ export const incrementTraffic = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 }
-//top auto filtravimas pagal traffica

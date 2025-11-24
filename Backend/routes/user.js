@@ -16,8 +16,5 @@ router.get('/', requireAuth, async (req, res) => {
 router.post('/login', loginUser)
 //signup route
 router.post('/signup', signupUser)
-// //get goal
-// router.get('/goal', requireAuth, getGoal)
-// //update goal
-// router.put('/goal', requireAuth, updateGoal)
+
 export default router

@@ -29,7 +29,7 @@ function App() {
                     </>
                   }
                 />
-            {/* jei turėsi dar puslapį su konkretaus automobilio informacija */}
+            
             <Route path="/automobiliai/:id" element={<><Automobilis/> </>} />
             <Route path="/mano-uzsakymai" element={<Uzsakymai />} />
             <Route path="/krepselis" element={<Krepselis />} />

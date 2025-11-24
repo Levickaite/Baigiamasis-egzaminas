@@ -262,8 +262,7 @@ function Skelbimai() {
         {/* Cars list */}
         <div className="cars-grid">
           {currentCars.map((car) => {
-            // normalize status (backend may send boolean or string)
-            // map order-related field to badge: 'įvykdyta' -> sold, 'patvirtinta' -> reserved
+           
             const s = (car.uzsakymoStatusas || "").toString().toLowerCase();
             const isSold = car.parduotas === true || car.parduotas === "true" || s.includes("įvykd");
             const isReserved = !isSold && (car.rezervuotas === true || car.rezervuotas === "true" || s.includes("patvirt"));
