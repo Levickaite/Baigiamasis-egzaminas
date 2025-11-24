@@ -18,7 +18,7 @@ const Krepselis = () => {
             return;
         }
         try {
-            const res = await fetch("http://localhost:4000/api/Autonamai/krepselis/", {
+            const res = await fetch("https://autonamai.onrender.com/api/Autonamai/krepselis/", {
                 headers: {
                     'Authorization': `Bearer ${user.token}`
                 }
@@ -48,7 +48,7 @@ const Krepselis = () => {
         
         setRemovingId(automobilisId);
         try {
-        const res = await fetch("http://localhost:4000/api/Autonamai/krepselis/remove", {
+        const res = await fetch("https://autonamai.onrender.com/api/Autonamai/krepselis/remove", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -100,7 +100,7 @@ const handlePay = async () => {
         status: 'Nepatvirtinta'
      };
 
-    const res = await fetch("http://localhost:4000/api/Autonamai/uzsakymas/create", {
+    const res = await fetch("https://autonamai.onrender.com/api/Autonamai/uzsakymas/create", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -121,7 +121,7 @@ const handlePay = async () => {
       // Update each car's status to 'rezervuotas'
       await Promise.all(
         cart.prekes.map(item =>
-          fetch(`http://localhost:4000/api/Autonamai/automobiliai/${item.automobilis._id}`, {
+          fetch(`https://autonamai.onrender.com/api/Autonamai/automobiliai/${item.automobilis._id}`, {
             method: 'PATCH',
             headers: {
               'Content-Type': 'application/json',

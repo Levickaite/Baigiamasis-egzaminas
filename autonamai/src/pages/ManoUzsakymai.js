@@ -35,7 +35,7 @@ function Uzsakymai() {
         }
         setUser(storedUser);
 
-        let url = "http://localhost:4000/api/Autonamai/uzsakymas";
+        let url = "https://autonamai.onrender.com/api/Autonamai/uzsakymas";
         if (storedUser.role === "user") {
           url += `?email=${encodeURIComponent(storedUser.email)}`;
         } else if (storedUser.role === "admin") {
@@ -82,7 +82,7 @@ function Uzsakymai() {
       if (token) headers.Authorization = `Bearer ${token}`;
 
       const res = await fetch(
-        `http://localhost:4000/api/Autonamai/uzsakymas/${carId}`,
+        `https://autonamai.onrender.com/api/Autonamai/uzsakymas/${carId}`,
         {
           method: "PATCH",
           headers,

@@ -5,6 +5,7 @@ import Skelbimas from "./Skelbimas";
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 
+
 // Mock axios
 jest.mock("axios");
 
@@ -235,7 +236,7 @@ describe("Skelbimas komponentas", () => {
     
     await waitFor(() => {
       expect(axios.post).toHaveBeenCalledWith(
-        "http://localhost:4000/api/Autonamai/automobiliai",
+        "https://autonamai.onrender.com/api/Autonamai/automobiliai",
         expect.any(FormData),
         expect.objectContaining({
           headers: expect.objectContaining({

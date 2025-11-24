@@ -8,7 +8,7 @@ function Home(){
     useEffect(() => {
         const fetchTopCars = async () => {
             try {
-                const response = await fetch("http://localhost:4000/api/Autonamai/automobiliai/top");
+                const response = await fetch("https://autonamai.onrender.com/api/Autonamai/automobiliai/top");
                 const data = await response.json();
                 const top3 = Array.isArray(data) ? data.slice(0, 3) : data;
                 setTopCars(top3);

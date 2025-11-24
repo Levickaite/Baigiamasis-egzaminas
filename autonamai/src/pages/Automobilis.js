@@ -34,14 +34,14 @@ export default function Automobilis() {
   useEffect(() => {
     const fetchCar = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/api/Autonamai/automobiliai/${id}`);
+        const response = await axios.get(`https://autonamai.onrender.com/api/Autonamai/automobiliai/${id}`);
         setCar(response.data);
         setEditedCar(response.data);
         console.log("Car data:", response?.data);
         console.log(car);
         // increment traffic counter (best-effort, ignore errors)
         try {
-          await fetch(`http://localhost:4000/api/Autonamai/automobiliai/${id}/visit`, { method: 'PATCH' });
+          await fetch(`https://autonamai.onrender.com/api/Autonamai/automobiliai/${id}/visit`, { method: 'PATCH' });
           window.dispatchEvent(new Event('carsUpdated'));
         } catch (e) {
           console.warn('Failed to increment traffic', e);
@@ -66,7 +66,7 @@ export default function Automobilis() {
   const handleSave = async () => {
     try {
       const response = await axios.patch(
-        `http://localhost:4000/api/Autonamai/automobiliai/${id}`,
+        `https://autonamai.onrender.com/api/Autonamai/automobiliai/${id}`,
         editedCar
       );
       setCar(response.data); 
@@ -93,7 +93,7 @@ export default function Automobilis() {
       return;
     }
     try {
-      const response = await fetch("http://localhost:4000/api/Autonamai/krepselis/add", {
+      const response = await fetch("https://autonamai.onrender.com/api/Autonamai/krepselis/add", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -115,7 +115,7 @@ export default function Automobilis() {
   const handleDelete = async () => {
     if (!window.confirm("Ar tikrai norite ištrinti šį automobilį?")) return;
     try {
-      const response = await axios.delete(`http://localhost:4000/api/Autonamai/automobiliai/${id}`);
+      const response = await axios.delete(`https://autonamai.onrender.com/api/Autonamai/automobiliai/${id}`);
       if (response.status === 200) {
         alert("Automobilis sėkmingai ištrintas.");
         window.location.href = "/automobiliai";
