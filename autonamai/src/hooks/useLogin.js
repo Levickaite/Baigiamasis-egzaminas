@@ -8,7 +8,7 @@ export const useLogin = () =>{
     const login = async (email, password) =>{
         setIsLoading(true)
         setError(null)
-        const response = await fetch('/api/autonamai/useriai/login', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/Autonamai/useriai/login`, {
             method: 'POST', 
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({email, password})

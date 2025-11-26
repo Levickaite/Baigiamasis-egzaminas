@@ -8,7 +8,7 @@ export const useSignup = () =>{
     const signup = async (email, password, name, lastname) =>{
         setIsLoading(true)
         setError(null)
-        const response = await fetch('/api/autonamai/useriai/signup', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/Autonamai/useriai/signup`, {
             method: 'POST', 
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({email, password, name, lastname})
