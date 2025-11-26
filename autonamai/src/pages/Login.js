@@ -1,37 +1,53 @@
 import { useState } from "react";
-import { useLogin } from "../hooks/useLogin";
-import { useNavigate } from "react-router-dom";
-import "../Indre.css";
-const Login = () =>{
-    const [email, setEmail] = useState('')
-    const navigate = useNavigate();
-    const [password, setPassword] = useState('')
-    const {login, error, isLoading} = useLogin()
-    const handleSubmit = async (e)=>{
-        e.preventDefault()
-        const success = await login (email, password)
-        if (success) {
-                navigate('/');
-            } 
+import { useAuthContext } from "./useAuthContext";
+
+export const useLogin = () => {
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(null);
+  const { dispatch } = useAuthContext();
+
+  const login = async (email, password) => {
+    setIsLoading(true);
+    setError(null);
+
+    let json;
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/Autonamai/useriai/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        }
+      );
+
+     
+      try {
+        json = await response.json();
+      } catch (e) {
+        json = null;
+      }
+
+      if (!response.ok) {
+        setIsLoading(false);
+        setError(json?.error || "Serverio klaida");
+        return false;
+      }
+
+      // Login sėkmingas
+      localStorage.setItem("user", JSON.stringify(json));
+      localStorage.setItem("token", json.token);
+      dispatch({ type: "LOGIN", payload: json });
+      setIsLoading(false);
+      return true;
+
+    } catch (err) {
+      setIsLoading(false);
+      setError("Nepavyko prisijungti prie serverio");
+      return false;
     }
- return (
- <form className="login" onSubmit={handleSubmit}>
-            <h3>Prisijungimas</h3>
-            <label>El. paštas</label>
-            <input
-                type="email"
-                onChange={(e)=> setEmail(e.target.value)}
-                value={email}
-            />
-            <label>Slaptažodis</label>
-            <input
-                type="password"
-                onChange={(e)=> setPassword(e.target.value)}
-                value={password}
-            />
-            <button disabled={isLoading}>Prisijungti</button>
-            {error && <div className="error">{error}</div>}
-        </form>
-    )
-}
-export default Login
+  };
+
+  return { login, isLoading, error };
+};
