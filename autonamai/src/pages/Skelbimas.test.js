@@ -236,7 +236,7 @@ describe("Skelbimas komponentas", () => {
     
     await waitFor(() => {
       expect(axios.post).toHaveBeenCalledWith(
-        "https://autonamai.onrender.com/api/Autonamai/automobiliai",
+        `${process.env.REACT_APP_API_URL}/Autonamai/automobiliai`,
         expect.any(FormData),
         expect.objectContaining({
           headers: expect.objectContaining({

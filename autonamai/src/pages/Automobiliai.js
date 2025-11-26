@@ -22,7 +22,7 @@ function Skelbimai() {
   
     const fetchCars = useCallback (async () => {
       try {
-        const res = await fetch("https://autonamai.onrender.com/api/Autonamai/automobiliai");
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/Autonamai/automobiliai`);
         const data = await res.json();
         // Remove or comment out unnecessary console.log statements
         data.forEach(c=>console.log(c._id, 'parduotas=', c.parduotas, 'rezervuotas=', c.rezervuotas, 'uzsakymoStatusas=', c.uzsakymoStatusas))

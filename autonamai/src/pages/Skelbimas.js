@@ -54,7 +54,7 @@ export default function Skelbimas() {
       const token = localStorage.getItem("token");
 
       const res = await axios.post(
-        "https://autonamai.onrender.com/api/Autonamai/automobiliai",
+        `${process.env.REACT_APP_API_URL}/Autonamai/automobiliai`,
         formData,
         {
           headers: {
