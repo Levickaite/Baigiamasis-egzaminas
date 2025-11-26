@@ -12,7 +12,7 @@ dotenv.config({ path: './.env' });
 
 //express app
 const app =express()
-app.use(cors({ origin: process.env.CORS }));
+app.use(cors({ origin: process.env.CORS || '*' }));
 //middleware
 app.use(express.json())
 app.use((req, res, next)=> {
@@ -23,7 +23,7 @@ app.use((req, res, next)=> {
 //routes 
 
 app.use('/api/Autonamai/automobiliai', masinosRoutes)
-app.use('/api/Autonamai/useriai', userRoutes)
+app.use('/api/autonamai/useriai', userRoutes)
 app.get('/',(req, res)=>{
     res.json({mssg: 'Welcome to the app!'})
 } )
