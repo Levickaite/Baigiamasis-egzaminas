@@ -23,7 +23,7 @@ app.use((req, res, next)=> {
 //routes 
 
 app.use('/api/Autonamai/automobiliai', masinosRoutes)
-app.use('/api/Autonamai/useriai', userRoutes)
+app.use('/api/autonamai/useriai', userRoutes)
 app.get('/',(req, res)=>{
     res.json({mssg: 'Welcome to the app!'})
 } )
